@@ -10,16 +10,16 @@ builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<IJewelryService, JewelryService>();
-builder.Services.AddScoped<IJewelryRepository, JewelryRepository>();
-builder.Services.AddScoped<IWarrantyService, WarrantyService>();
-builder.Services.AddScoped<IWarrantyRepository, WarrantyRepository>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
-builder.Services.AddScoped<IBillService, BillService>();
-builder.Services.AddScoped<IBillRepository, BillRepository>();
-builder.Services.AddScoped<IPromotionService, PromotionService>();
-builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+//builder.Services.AddScoped<IJewelryService, JewelryService>();
+//builder.Services.AddScoped<IJewelryRepository, JewelryRepository>();
+//builder.Services.AddScoped<IWarrantyService, WarrantyService>();
+//builder.Services.AddScoped<IWarrantyRepository, WarrantyRepository>();
+//builder.Services.AddScoped<ICustomerService, CustomerService>();
+//builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+//builder.Services.AddScoped<IBillService, BillService>();
+//builder.Services.AddScoped<IBillRepository, BillRepository>();
+//builder.Services.AddScoped<IPromotionService, PromotionService>();
+//builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 
 
 
