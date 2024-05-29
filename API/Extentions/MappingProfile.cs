@@ -8,8 +8,8 @@ namespace API.Extentions
     {
         public MappingProfile()
         {
-            CreateMap<Jewelry, JewelryDTO>().ReverseMap();
-            CreateMap<Warranty, WarrantyDTO>().ReverseMap();
+            //CreateMap<Jewelry, JewelryDTO>().ReverseMap();
+            //CreateMap<Warranty, WarrantyDTO>().ReverseMap();
         }
     }
 }
