@@ -18,8 +18,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 //builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 //builder.Services.AddScoped<IBillService, BillService>();
 //builder.Services.AddScoped<IBillRepository, BillRepository>();
-//builder.Services.AddScoped<IPromotionService, PromotionService>();
-//builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 
 
 
