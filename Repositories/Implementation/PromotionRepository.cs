@@ -46,6 +46,7 @@ namespace Repositories.Implementation
         public async Task<int> Update(int id, PromotionDTO entity)
         {
             return await PromotionDAO.Instance.UpdatePromotion(id, entity);
+
         }
     }
 }
