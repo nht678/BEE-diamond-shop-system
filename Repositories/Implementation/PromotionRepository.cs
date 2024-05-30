@@ -47,6 +47,7 @@ namespace Repositories.Implementation
         {
             return await PromotionDAO.Instance.UpdatePromotion(id, entity);
 
+
         }
     }
 }
