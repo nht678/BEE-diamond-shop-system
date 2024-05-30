@@ -41,11 +41,14 @@ namespace Repositories.Implementation
         public Task<Promotion?> GetById(int id)
         {
             throw new NotImplementedException();
+
         }
 
         public async Task<int> Update(int id, PromotionDTO entity)
         {
             return await PromotionDAO.Instance.UpdatePromotion(id, entity);
+
+
         }
     }
 }
