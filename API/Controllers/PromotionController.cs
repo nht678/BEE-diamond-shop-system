@@ -37,8 +37,5 @@ namespace API.Controllers
             var result = await PromotionService.UpdatePromotion(id, promotionDTO);
             return Ok(result);
         }
-
-        //hello
-
     }
 }
