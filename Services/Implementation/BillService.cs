@@ -7,8 +7,9 @@ namespace Services.Implementation
 {
     public class BillService(IBillRepository billRepository) : IBillService
     {
-        public IBillRepository BillRepository { get; } = billRepository;
+        private readonly IBillRepository billRepository = billRepository;
 
+        public IBillRepository BillRepository => billRepository;
         public async Task<int> Create(BillDTO entity)
         {
             return await billRepository.Create(entity);
@@ -19,12 +20,12 @@ namespace Services.Implementation
             return await billRepository.FindBillByCustomerId(customerId);
         }
 
-        public async Task<IEnumerable<Bill?>?> GetAll()
+        public async Task<IEnumerable<BillResponseDTO?>?> GetAll()
         {
             return await billRepository.GetAll();
         }
 
-        public async Task<Bill?> GetById(int id)
+        public async Task<BillResponseDTO?> GetById(int id)
         {
             return await billRepository.GetById(id);
         }

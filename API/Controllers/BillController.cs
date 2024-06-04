@@ -26,6 +26,7 @@ public class BillController(IBillService billService, IMapper mapper) : Controll
         {
             return NotFound();
         }
+        //BillResponseDTO billResponseDTO = Mapper.Map<BillResponseDTO>(bill);
         return Ok(bill);
     }
     [HttpPost]
