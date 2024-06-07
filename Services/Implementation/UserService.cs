@@ -9,7 +9,7 @@ namespace Services.Implementation
     {
         public IUserRepository UserRepository { get; } = userRepository;
 
-        public async Task<User?> Login(LoginDTO loginDTO)
+        public async Task<User?> Login(LoginDto loginDTO)
         {
             return await UserRepository.GetUser(loginDTO.Email ?? "", loginDTO.Password ?? "");
         }

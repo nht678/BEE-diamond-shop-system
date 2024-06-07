@@ -1,15 +1,15 @@
-﻿using BusinessObjects.Models;
-using DAO.Context;
+﻿using BusinessObjects.Context;
+using BusinessObjects.Models;
 using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
 namespace DAO
 {
-    public class BillJewelryDAO : Singleton<BillJewelryDAO>
+    public class BillJewelryDao : Singleton<BillJewelryDao>
     {
-        private readonly JssatsV2Context _context;
-        public BillJewelryDAO()
+        private readonly JssatsContext _context;
+        public BillJewelryDao()
         {
-            _context = new JssatsV2Context();
+            _context = new JssatsContext();
         }
         public async Task<IEnumerable<BillJewelry?>?> GetBillJewelries()
         {
@@ -21,8 +21,6 @@ namespace DAO
         }
         public async Task<int> CreateBillJewelry(BillJewelry billJewelry)
         {
-            var maxBillJewelryId = await _context.BillJewelries.MaxAsync(b => b.BillJewelryId);
-            billJewelry.BillJewelryId = maxBillJewelryId + 1;
             _context.BillJewelries.Add(billJewelry);
             return await _context.SaveChangesAsync();
         }
