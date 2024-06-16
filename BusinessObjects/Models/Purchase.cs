@@ -6,15 +6,15 @@ namespace BusinessObjects.Models;
 
 public partial class Purchase
 {
-    public int PurchaseId { get; set; }
+    public required string PurchaseId { get; set; }
 
-    public int? CustomerId { get; set; }
+    public string? CustomerId { get; set; }
 
-    public int? UserId { get; set; }
+    public string? UserId { get; set; }
 
-    public int? JewelryId { get; set; }
+    public string? JewelryId { get; set; }
 
-    public DateTime? PurchaseDate { get; set; }
+    public DateTimeOffset? PurchaseDate { get; set; }
 
     public double? PurchasePrice { get; set; }
 

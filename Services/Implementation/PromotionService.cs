@@ -1,8 +1,8 @@
-﻿using BusinessObjects.DTO;
-using BusinessObjects.Models;
+﻿using BusinessObjects.Models;
 using Repositories.Interface;
 using Services.Interface;
 using AutoMapper;
+using BusinessObjects.Dto;
 
 namespace Services.Implementation
 {
@@ -16,17 +16,22 @@ namespace Services.Implementation
             return await PromotionRepository.Create(Mapper.Map<Promotion>(promotionDto));
         }
 
-        public async Task<int> DeletePromotion(int id)
+        public async Task<int> DeletePromotion(string id)
         {
             return await PromotionRepository.Delete(id);
         }
 
         public async Task<IEnumerable<Promotion?>?> GetPromotions()
         {
-            return await PromotionRepository.GetAll();
+            return await PromotionRepository.Gets();
         }
 
-        public async Task<int> UpdatePromotion(int id, PromotionDto promotionDto)
+        public Task<Promotion?> GetPromotionById(string id)
+        {
+            return PromotionRepository.GetById(id);
+        }
+
+        public async Task<int> UpdatePromotion(string id, PromotionDto promotionDto)
         {
             return await PromotionRepository.Update(id, Mapper.Map<Promotion>(promotionDto));
         }

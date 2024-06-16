@@ -1,7 +1,5 @@
-﻿using BusinessObjects.DTO;
-using Microsoft.AspNetCore.Http;
+﻿using BusinessObjects.Dto;
 using Microsoft.AspNetCore.Mvc;
-using Services.Implementation;
 using Services.Interface;
 
 namespace API.Controllers
@@ -10,14 +8,19 @@ namespace API.Controllers
     [ApiController]
     public class PromotionController(IPromotionService promotionService) : ControllerBase
     {
-        public IPromotionService PromotionService { get; } = promotionService;
-        [HttpGet("GetAll")]
+        private IPromotionService PromotionService { get; } = promotionService;
+        [HttpGet("GetPromotions")]
         public async Task<IActionResult> GetAllPromotion()
         {
             var result = await PromotionService.GetPromotions();
             return Ok(result);
         }
-
+        [HttpGet("GetPromotionById/{id}")]
+        public async Task<IActionResult> GetPromotionById(string id)
+        {
+            var result = await PromotionService.GetPromotionById(id);
+            return Ok(result);
+        }
         [HttpPost("AddNewPromotion")]
         public async Task<IActionResult> AddPromotion(PromotionDto promotionDto)
         {
@@ -25,14 +28,14 @@ namespace API.Controllers
             return Ok(result);
         }
         [HttpDelete("DeletePromotion")]
-        public async Task<IActionResult> DeletePromotion(int id)
+        public async Task<IActionResult> DeletePromotion(string id)
         {
             var result = await PromotionService.DeletePromotion(id);
             return Ok(result);
         }
 
         [HttpPut("UpdatePromotion")]
-        public async Task<IActionResult> UpdatePromotion(int id, PromotionDto promotionDto)
+        public async Task<IActionResult> UpdatePromotion(string id, PromotionDto promotionDto)
         {
             var result = await PromotionService.UpdatePromotion(id, promotionDto);
             return Ok(result);

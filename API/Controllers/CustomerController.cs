@@ -8,31 +8,31 @@ namespace API.Controllers;
 [ApiController]
 public class CustomerController(ICustomerService customerService) : ControllerBase
 {
-    public ICustomerService CustomerService { get; } = customerService;
+    private ICustomerService CustomerService { get; } = customerService;
     [HttpGet]
     public async Task<IEnumerable<Customer?>?> GetCustomers()
     {
         return await CustomerService.GetCustomers();
     }
-    [HttpGet("{id}")]
-    public async Task<Customer?> GetCustomerById(int id)
+    [HttpGet("GetCustomerById/{id}")]
+    public async Task<Customer?> GetCustomerById(string id)
     {
         return await CustomerService.GetCustomerById(id);
     }
-    [HttpPost]
+    [HttpPost("CreateCustomer")]
     public async Task<IActionResult> CreateCustomer(Customer customer)
     {
         var result = await CustomerService.CreateCustomer(customer);
         return Ok(result);
     }
-    [HttpPut]
-    public async Task<IActionResult> UpdateCustomer([FromQuery]int id, Customer customer)
+    [HttpPut("UpdateCustomer/{id}")]
+    public async Task<IActionResult> UpdateCustomer(string id, Customer customer)
     {
         var result = await CustomerService.UpdateCustomer(id ,customer);
         return Ok(result);
     }
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteCustomer(int id)
+    [HttpDelete("DeleteCustomer/{id}")]
+    public async Task<IActionResult> DeleteCustomer(string id)
     {
         var result = await CustomerService.DeleteCustomer(id);
         return Ok(result);

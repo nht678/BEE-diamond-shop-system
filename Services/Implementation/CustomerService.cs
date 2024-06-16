@@ -13,22 +13,22 @@ namespace Services.Implementation
             return await CustomerRepository.Create(customer);
         }
 
-        public Task<int> DeleteCustomer(int id)
+        public Task<int> DeleteCustomer(string id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Customer?> GetCustomerById(int id)
+        public async Task<Customer?> GetCustomerById(string id)
         {
             return await CustomerRepository.GetById(id);
         }
 
         public async Task<IEnumerable<Customer?>?> GetCustomers()
         {
-            return await CustomerRepository.GetAll();
+            return await CustomerRepository.Gets();
         }
 
-        public async Task<int> UpdateCustomer(int id, Customer customer)
+        public async Task<int> UpdateCustomer(string id, Customer customer)
         {
             return await CustomerRepository.Update(id, customer);
         }
