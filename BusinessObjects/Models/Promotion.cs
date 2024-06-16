@@ -5,7 +5,7 @@ namespace BusinessObjects.Models;
 
 public partial class Promotion
 {
-    public int PromotionId { get; set; }
+    public required string PromotionId { get; set; }
 
     public string? Type { get; set; }
 
@@ -15,9 +15,9 @@ public partial class Promotion
 
     public double? DiscountRate { get; set; }
 
-    public DateTime? StartDate { get; set; }
+    public DateTimeOffset? StartDate { get; set; }
 
-    public DateTime? EndDate { get; set; }
+    public DateTimeOffset? EndDate { get; set; }
 
     public virtual ICollection<BillPromotion> BillPromotions { get; set; } = new List<BillPromotion>();
 }

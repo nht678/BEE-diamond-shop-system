@@ -1,8 +1,8 @@
-﻿namespace BusinessObjects.DTO;
+﻿namespace BusinessObjects.Dto;
 
 public class JewelryDto
 {
-    public int JewelryTypeId { get; set; }
+    public string? JewelryTypeId { get; set; }
     
     public string? Name { get; set; }
 

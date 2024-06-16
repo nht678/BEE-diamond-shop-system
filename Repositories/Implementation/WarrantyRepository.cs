@@ -1,18 +1,18 @@
 ﻿using AutoMapper;
-using BusinessObjects.DTO;
 using BusinessObjects.Models;
 using DAO;
 using Repositories.Interface;
 
 namespace Repositories.Implementation
 {
-    public class WarrantyRepository(IMapper mapper) : IWarrantyRepository
+    public class WarrantyRepository(WarrantyDao warrantyDao, JewelryDao jewelryDao) : IWarrantyRepository
     {
-        public IMapper Mapper { get; } = mapper;
+        public WarrantyDao WarrantyDao { get; } = warrantyDao;
+        public JewelryDao JewelryDao { get; } = jewelryDao;
 
         public async Task<int> Create(Warranty entity)
         {
-            return await WarrantyDao.Instance.CreateWarranty(entity);
+            return await WarrantyDao.CreateWarranty(entity);
         }
 
         public Task<IEnumerable<Warranty>> Find(Func<Warranty, bool> predicate)
@@ -20,21 +20,28 @@ namespace Repositories.Implementation
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Warranty?>?> GetAll()
+        public async Task<IEnumerable<Warranty?>?> Gets()
         {
-            var warranties =  await WarrantyDao.Instance.GetWarranties();
+            var warranties =  await WarrantyDao.GetWarranties();
+            foreach (var warranty in warranties)
+            {
+                var jewelry = await JewelryDao.GetJewelryById(warranty.JewelryId);
+                warranty.Jewelry = jewelry;
+            }            
             return warranties;
         }
 
-        public async Task<Warranty?> GetById(int id)
+        public async Task<Warranty?> GetById(string id)
         {
-            var warranty = await WarrantyDao.Instance.GetWarrantyById(id);
+            var warranty = await WarrantyDao.GetWarrantyById(id);
+            var jewelry = await JewelryDao.GetJewelryById(warranty.JewelryId);
+            warranty.Jewelry = jewelry;
             return warranty;
         }
 
-        public async Task<int> Update(int id, Warranty entity)
+        public async Task<int> Update(string id, Warranty entity)
         {
-            return await WarrantyDao.Instance.UpdateWarranty(id, entity);
+            return await WarrantyDao.UpdateWarranty(id, entity);
         }
     }
 }

@@ -1,25 +1,59 @@
-﻿using BusinessObjects.DTO;
+﻿using BusinessObjects.Dto;
+using BusinessObjects.Dto.Bill;
 using BusinessObjects.Models;
 using Management.Interface;
-using Repositories.Interface;
+using Services.Interface;
 
 namespace Management.Implementation
 {
-    public class UserManagement : IUserManagement
+    public class UserManagement(IUserService userService, IBillService billService) : IUserManagement
     {
-        public Task<User?> Login(LoginDto loginDTO)
+        private IUserService UserService { get; } = userService;
+        private IBillService BillService { get; } = billService;
+
+        public async Task<User?> Login(LoginDto loginDto)
         {
-            throw new NotImplementedException();
+            return await UserService.Login(loginDto);
         }
 
-        public Task<IEnumerable<User?>?> GetUsers()
+        public async Task<IEnumerable<User?>?> GetUsers()
         {
-            throw new NotImplementedException();
+            return await UserService.GetUsers();
         }
 
-        public Task<bool> IsUser(string email, string password)
+        public async Task<IEnumerable<Bill?>?> GetBills()
         {
-            throw new NotImplementedException();
+            return await BillService.GetBills();
+        }
+
+        public async Task<Bill?> GetBillById(string id)
+        {
+            return await BillService.GetById(id);
+        }
+
+        public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
+        {
+            return await BillService.Create(billRequestDto);
+        }
+
+        public async Task<User?> GetUserById(string id)
+        {
+            return await UserService.GetUserById(id);
+        }
+
+        public async Task<int> AddUser(UserDto userDto)
+        {
+            return await UserService.AddUser(userDto);
+        }
+
+        public async Task<int> UpdateUser(string id, UserDto user)
+        {
+            return await UserService.UpdateUser(id, user);
+        }
+
+        public async Task<int> DeleteUser(string id)
+        {
+            return await UserService.DeleteUser(id);
         }
     }
 }

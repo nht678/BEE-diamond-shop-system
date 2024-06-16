@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BusinessObjects.DTO;
+using BusinessObjects.Dto;
 using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
@@ -9,29 +9,29 @@ namespace API.Controllers;
 [ApiController]
 public class JewelryTypeController(IJewelryTypeService service, IMapper mapper) : ControllerBase
 {
-    public IJewelryTypeService Service { get; } = service;
-    public IMapper Mapper { get; } = mapper;
+    private IJewelryTypeService Service { get; } = service;
+    private IMapper Mapper { get; } = mapper;
 
-    [HttpGet]
+    [HttpGet("GetJewelryTypes")]
     public async Task<IActionResult> Get()
     {
         var jewelryTypes = await Service.GetJewelry();
         return Ok(jewelryTypes);
     }
-    [HttpGet("{id}")]
-    public async Task<IActionResult> Get(int id)
+    [HttpGet("GetJewelryById/{id}")]
+    public async Task<IActionResult> Get(string id)
     {
         var jewelryType = await Service.GetJewelryById(id);
         return Ok(jewelryType);
     }
-    [HttpPost]
+    [HttpPost("CreateJewelryType")]
     public async Task<IActionResult> CreateJewelryType(JewelryTypeDto jewelryType)
     {
         var result = await Service.CreateJewelry(Mapper.Map<JewelryType>(jewelryType));
         return Ok(result);
     }
-    [HttpPut]
-    public async Task<IActionResult> UpdateJewelryType(int id, JewelryTypeDto jewelryType)
+    [HttpPut("UpdateJewelryType/{id}")]
+    public async Task<IActionResult> UpdateJewelryType(string id, JewelryTypeDto jewelryType)
     {
         var result = await Service.UpdateJewelry(id, Mapper.Map<JewelryType>(jewelryType));
         return Ok(result);
