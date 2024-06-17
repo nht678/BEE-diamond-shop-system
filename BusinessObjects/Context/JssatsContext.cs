@@ -20,7 +20,7 @@ namespace BusinessObjects.Context
             {
                 //optionsBuilder.UseSqlServer(GetConnectionString());
                 optionsBuilder.UseSqlServer(
-                    "Server=THANHNHAT\\SQLEXPRESS;Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
+                    "Server=(local);Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
             }
         }
 
@@ -52,7 +52,6 @@ namespace BusinessObjects.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
-        public DbSet<MasterPrice> MasterPrices { get; set; }
         public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
         public DbSet<GoldPrice> GoldPrices { get; set; }
         public DbSet<StonePrice> StonePrices { get; set; }
@@ -153,11 +152,16 @@ namespace BusinessObjects.Context
                 .Property(w => w.WarrantyId)
                 .HasColumnType("varchar(20)");
 
-            modelBuilder.Entity<MasterPrice>()
-                .HasKey(mp => mp.MasterPriceId);
-
-            modelBuilder.Entity<MasterPrice>()
-                .Property(mp => mp.MasterPriceId)
+            modelBuilder.Entity<StoneMasterPrice>()
+                .HasKey(mp => mp.StoneMasterPriceId);
+            modelBuilder.Entity<StoneMasterPrice>()
+                .Property(w => w.StoneMasterPriceId)
+                .HasColumnType("varchar(20)");
+            
+            modelBuilder.Entity<GoldMasterPrice>()
+                .HasKey(mp => mp.GoldMasterPriceId);
+            modelBuilder.Entity<GoldMasterPrice>()
+                .Property(mp => mp.GoldMasterPriceId)
                 .HasColumnType("varchar(20)");
 
 
@@ -168,16 +172,16 @@ namespace BusinessObjects.Context
                 .Property(sp => sp.StonePriceId)
                 .HasColumnType("varchar(20)");
             // Relationships
-            modelBuilder.Entity<MasterPrice>()
-                .HasOne(mp => mp.GoldPrice)
-                .WithMany(gp => gp.MasterPrices)
-                .HasForeignKey(mp => mp.GoldPriceId)
+            modelBuilder.Entity<StoneMasterPrice>()
+                .HasOne(mp => mp.StonePrice)
+                .WithMany(gp => gp.StoneMasterPrices)
+                .HasForeignKey(mp => mp.StonePriceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<MasterPrice>()
-                .HasOne(mp => mp.StonePrice)
-                .WithMany(sp => sp.MasterPrices)
-                .HasForeignKey(mp => mp.StonePriceId)
+            modelBuilder.Entity<GoldMasterPrice>()
+                .HasOne(mp => mp.GoldPrice)
+                .WithMany(sp => sp.GoldMasterPrices)
+                .HasForeignKey(mp => mp.GoldPriceId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<JewelryMaterial>()

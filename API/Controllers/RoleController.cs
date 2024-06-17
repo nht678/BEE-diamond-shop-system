@@ -1,5 +1,4 @@
-﻿using BusinessObjects.Dto;
-using BusinessObjects.Dto.Bill;
+﻿using BusinessObjects.DTO;
 using Management.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
