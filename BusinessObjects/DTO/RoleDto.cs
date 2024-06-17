@@ -1,6 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-
-namespace BusinessObjects.Dto;
+﻿namespace BusinessObjects.DTO;
 
 public class RoleDto
 {

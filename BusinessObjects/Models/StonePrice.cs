@@ -11,5 +11,5 @@ public class StonePrice
     public DateTimeOffset LastUpdated { get; set; }
     
     public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; } = new List<JewelryMaterial>();
-    public virtual ICollection<MasterPrice> MasterPrices { get; set; } = new List<MasterPrice>();
+    public virtual ICollection<StoneMasterPrice> StoneMasterPrices { get; set; } = new List<StoneMasterPrice>();
 }
