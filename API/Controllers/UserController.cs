@@ -32,7 +32,6 @@ public class UserController(IUserManagement userManagement) : ControllerBase
         if (token != null) return Ok(token);
         return NotFound(new { message = "Login fail" });
     }
-    [Authorize(Roles = "Manager")]
     [HttpPost("AddUser")]
     public async Task<IActionResult> AddUser(UserDto userDto)
     {
