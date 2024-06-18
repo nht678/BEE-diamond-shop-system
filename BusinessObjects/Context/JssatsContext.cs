@@ -19,19 +19,23 @@ namespace BusinessObjects.Context
             if (!optionsBuilder.IsConfigured)
             {
                 //optionsBuilder.UseSqlServer(GetConnectionString());
-                optionsBuilder.UseSqlServer(
-                    "Server=(local);Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
+                //optionsBuilder.UseNpgsql(GetConnectionString());
+                optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
+                //optionsBuilder.UseNpgsql("Host=aws-0-ap-southeast-1.pooler.supabase.com; Database=postgres; Username=postgres.gfjsnspjzlcfdrzxxksm; Password=Akaka0406+++");
+
             }
         }
 
         //private static string GetConnectionString()
         //{
-        //    IConfigurationRoot config = new ConfigurationBuilder()
+        //    var config = new ConfigurationBuilder()
         //        .SetBasePath(Directory.GetCurrentDirectory())
         //        .AddJsonFile("appsettings.json", true, true)
         //        .Build();
 
-        //    var strConn = config["ConnectionStrings:JSSATS"];
+        //    var strConn = config["ConnectionStrings:JSSATS-Local"];
+        //    //var strConn = config["ConnectionStrings:JSSATS-Cloud"];
+
         //    if (string.IsNullOrEmpty(strConn))
         //    {
         //        throw new InvalidOperationException("Connection string 'JSSATS' not found.");
@@ -43,6 +47,7 @@ namespace BusinessObjects.Context
         public DbSet<Bill> Bills { get; set; }
         public DbSet<BillJewelry> BillJewelries { get; set; }
         public DbSet<BillPromotion> BillPromotions { get; set; }
+        
         public DbSet<Counter> Counters { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Jewelry> Jewelries { get; set; }
@@ -53,9 +58,9 @@ namespace BusinessObjects.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
-        public DbSet<GoldPrice> GoldPrices { get; set; }
-        public DbSet<StonePrice> StonePrices { get; set; }
-
+        
+        public DbSet<Gold> Golds { get; set; }
+        public DbSet<Gem> Gems { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -95,11 +100,11 @@ namespace BusinessObjects.Context
                 .Property(cu => cu.CustomerId)
                 .HasColumnType("varchar(20)");
 
-            modelBuilder.Entity<GoldPrice>()
-                .HasKey(gp => gp.GoldPriceId);
+            modelBuilder.Entity<Gold>()
+                .HasKey(gp => gp.GoldId);
 
-            modelBuilder.Entity<GoldPrice>()
-                .Property(gp => gp.GoldPriceId)
+            modelBuilder.Entity<Gold>()
+                .Property(gp => gp.GoldId)
                 .HasColumnType("varchar(20)");
 
             modelBuilder.Entity<Jewelry>()
@@ -108,8 +113,7 @@ namespace BusinessObjects.Context
             modelBuilder.Entity<Jewelry>()
                 .Property(j => j.JewelryId)
                 .HasColumnType("varchar(20)");
-            ;
-
+            
             modelBuilder.Entity<JewelryType>()
                 .HasKey(jt => jt.JewelryTypeId);
 
@@ -151,38 +155,15 @@ namespace BusinessObjects.Context
             modelBuilder.Entity<Warranty>()
                 .Property(w => w.WarrantyId)
                 .HasColumnType("varchar(20)");
-
-            modelBuilder.Entity<StoneMasterPrice>()
-                .HasKey(mp => mp.StoneMasterPriceId);
-            modelBuilder.Entity<StoneMasterPrice>()
-                .Property(w => w.StoneMasterPriceId)
-                .HasColumnType("varchar(20)");
             
-            modelBuilder.Entity<GoldMasterPrice>()
-                .HasKey(mp => mp.GoldMasterPriceId);
-            modelBuilder.Entity<GoldMasterPrice>()
-                .Property(mp => mp.GoldMasterPriceId)
-                .HasColumnType("varchar(20)");
 
+            modelBuilder.Entity<Gem>()
+                .HasKey(sp => sp.GemId);
 
-            modelBuilder.Entity<StonePrice>()
-                .HasKey(sp => sp.StonePriceId);
-
-            modelBuilder.Entity<StonePrice>()
-                .Property(sp => sp.StonePriceId)
+            modelBuilder.Entity<Gem>()
+                .Property(sp => sp.GemId)
                 .HasColumnType("varchar(20)");
             // Relationships
-            modelBuilder.Entity<StoneMasterPrice>()
-                .HasOne(mp => mp.StonePrice)
-                .WithMany(gp => gp.StoneMasterPrices)
-                .HasForeignKey(mp => mp.StonePriceId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<GoldMasterPrice>()
-                .HasOne(mp => mp.GoldPrice)
-                .WithMany(sp => sp.GoldMasterPrices)
-                .HasForeignKey(mp => mp.GoldPriceId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<JewelryMaterial>()
                 .HasOne(jm => jm.Jewelry)
@@ -307,9 +288,9 @@ namespace BusinessObjects.Context
             );
 
             modelBuilder.Entity<Customer>().HasData(
-                new Customer { CustomerId = "1", Name = "Nguyen Van A", Phone = "0123456789", Address = "Ha Noi" },
-                new Customer { CustomerId = "2", Name = "Nguyen Van B", Phone = "0123456789", Address = "Ha Noi" },
-                new Customer { CustomerId = "3", Name = "Nguyen Van C", Phone = "0123456789", Address = "Ha Noi" }
+                new Customer { CustomerId = "1", FullName = "Nguyen Van A", Phone = "0123456789", Address = "Ha Noi" },
+                new Customer { CustomerId = "2", FullName = "Nguyen Van B", Phone = "0123456789", Address = "Ha Noi" },
+                new Customer { CustomerId = "3", FullName = "Nguyen Van C", Phone = "0123456789", Address = "Ha Noi" }
             );
 
             modelBuilder.Entity<JewelryType>().HasData(
@@ -328,19 +309,18 @@ namespace BusinessObjects.Context
                 {
                     JewelryId = "2", Name = "Nhan", JewelryTypeId = "2", Barcode = "SAC132", LaborCost = 231,
                     IsSold = false
-                },
-                new Jewelry
-                {
-                    JewelryId = "3", Name = "Day chuyen", JewelryTypeId = "3", Barcode = "SACC3", LaborCost = 431,
-                    IsSold = true
-                },
-                new Jewelry
-                {
-                    JewelryId = "4", Name = "Vong tay Xanh", JewelryTypeId = "2", Barcode = "SFA131", LaborCost = 552,
-                    IsSold = true
                 }
             );
-
+            modelBuilder.Entity<JewelryMaterial>().HasData(
+                new JewelryMaterial
+                {
+                    JewelryMaterialId = "1", JewelryId = "1", GoldQuantity = 30, GoldPriceId = "1", StoneQuantity = 1,StonePriceId = "1"
+                },
+                new JewelryMaterial
+                {
+                    JewelryMaterialId = "2", JewelryId = "2", GoldQuantity = 20, GoldPriceId = "2", StoneQuantity = 1,StonePriceId = "2"
+                }
+                );
             modelBuilder.Entity<Promotion>().HasData(
                 new Promotion
                 {
@@ -366,8 +346,7 @@ namespace BusinessObjects.Context
 
             modelBuilder.Entity<BillJewelry>().HasData(
                 new BillJewelry { BillJewelryId = "1", BillId = "1", JewelryId = "1" },
-                new BillJewelry { BillJewelryId = "2", BillId = "1", JewelryId = "2" },
-                new BillJewelry { BillJewelryId = "3", BillId = "2", JewelryId = "3" }
+                new BillJewelry { BillJewelryId = "2", BillId = "1", JewelryId = "2" }
             );
 
             modelBuilder.Entity<BillPromotion>().HasData(
@@ -375,38 +354,38 @@ namespace BusinessObjects.Context
                 new BillPromotion { BillPromotionId = "2", BillId = "2", PromotionId = "1" }
             );
 
-            modelBuilder.Entity<StonePrice>().HasData(
-                new StonePrice
+            modelBuilder.Entity<Gem>().HasData(
+                new Gem
                 {
-                    StonePriceId = "1", BuyPrice = 300, SellPrice = 400, LastUpdated = DateTime.Now, Type = "Ruby",
+                    GemId = "1", BuyPrice = 300, SellPrice = 400, LastUpdated = DateTime.Now, Type = "Ruby",
                     City = "Ha Noi"
                 },
-                new StonePrice
+                new Gem
                 {
-                    StonePriceId = "2", BuyPrice = 400, SellPrice = 500, LastUpdated = DateTime.Now, Type = "Sapphire",
+                    GemId = "2", BuyPrice = 400, SellPrice = 500, LastUpdated = DateTime.Now, Type = "Sapphire",
                     City = "Ha Noi"
                 },
-                new StonePrice
+                new Gem
                 {
-                    StonePriceId = "3", BuyPrice = 500, SellPrice = 600, LastUpdated = DateTime.Now, Type = "Emerald",
+                    GemId = "3", BuyPrice = 500, SellPrice = 600, LastUpdated = DateTime.Now, Type = "Emerald",
                     City = "Ha Noi"
                 }
             );
 
-            modelBuilder.Entity<GoldPrice>().HasData(
-                new GoldPrice
+            modelBuilder.Entity<Gold>().HasData(
+                new Gold
                 {
-                    GoldPriceId = "1", BuyPrice = 1000, SellPrice = 1200, LastUpdated = DateTime.Now, City = "Ha Noi",
+                    GoldId = "1", BuyPrice = 1000, SellPrice = 1200, LastUpdated = DateTime.Now, City = "Ha Noi",
                     Type = "9999"
                 },
-                new GoldPrice
+                new Gold
                 {
-                    GoldPriceId = "2", BuyPrice = 1200, SellPrice = 1400, LastUpdated = DateTime.Now, City = "Ha Noi",
+                    GoldId = "2", BuyPrice = 1200, SellPrice = 1400, LastUpdated = DateTime.Now, City = "Ha Noi",
                     Type = "SCJ"
                 },
-                new GoldPrice
+                new Gold
                 {
-                    GoldPriceId = "3", BuyPrice = 1400, SellPrice = 1600, LastUpdated = DateTime.Now, City = "Ha Noi",
+                    GoldId = "3", BuyPrice = 1400, SellPrice = 1600, LastUpdated = DateTime.Now, City = "Ha Noi",
                     Type = "18k"
                 }
             );
@@ -422,12 +401,6 @@ namespace BusinessObjects.Context
                 {
                     PurchaseId = "2", CustomerId = "2", JewelryId = "2", UserId = "1", IsBuyBack = 1,
                     PurchasePrice = 300,
-                    PurchaseDate = DateTime.Now
-                },
-                new Purchase
-                {
-                    PurchaseId = "3", CustomerId = "2", JewelryId = "3", UserId = "1", IsBuyBack = 0,
-                    PurchasePrice = 1000,
                     PurchaseDate = DateTime.Now
                 }
             );

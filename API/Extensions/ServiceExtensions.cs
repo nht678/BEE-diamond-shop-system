@@ -1,6 +1,7 @@
 ﻿using DAO;
 using Management.Implementation;
 using Management.Interface;
+using MongoDB.Driver;
 using Repositories.Implementation;
 using Repositories.Interface;
 using Services.Implementation;
@@ -24,7 +25,13 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<IJewelryTypeRepository, JewelryTypeRepository>();
         serviceCollection.AddScoped<IRoleRepository, RoleRepository>();
         serviceCollection.AddScoped<IGoldPriceRepository, GoldPriceRepository>();
+        serviceCollection.AddScoped<IGemPriceRepository, GemPriceRepository>();
+        serviceCollection.AddScoped<IBillPromotionRepository, BillPromotionRepository>();
+        serviceCollection.AddScoped<IBillJewelryRepository, BillJewelryRepository>();
+        serviceCollection.AddScoped<IBillDetailRepository, BillDetailRepository>();
+        serviceCollection.AddScoped<IJewelryMaterialRepository, JewelryMaterialRepository>();
         //Services
+        serviceCollection.AddScoped<IGemPriceService, GemPriceService>();
         serviceCollection.AddScoped<IGoldPriceService, GoldPriceService>();
         serviceCollection.AddScoped<IRoleService, RoleService>();
         serviceCollection.AddScoped<IUserService, UserService>();
@@ -46,10 +53,17 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<PromotionDao>();
         serviceCollection.AddScoped<PurchaseDao>();
         serviceCollection.AddScoped<RoleDao>();
-        serviceCollection.AddScoped<StonePriceDao>();
+        serviceCollection.AddScoped<GemPriceDao>();
         serviceCollection.AddScoped<UserDao>();
         serviceCollection.AddScoped<WarrantyDao>();
-        
+        serviceCollection.AddScoped<JewelryMaterialDao>();
+        //Other
+        serviceCollection.AddSingleton<IMongoClient, MongoClient>(s =>
+        {
+            var uri = s.GetRequiredService<IConfiguration>()["MongoDb:CloudConnectionString"];
+            return new MongoClient(uri);
+        });
+
         return serviceCollection;
     }
 }
