@@ -6,7 +6,7 @@
         {
             public InvalidDataException() : base() { }
             public InvalidDataException(string message) : base(message) { }
-            public InvalidDataException(string message, Exception innerException) : base(message,innerException) { }
+            public InvalidDataException(string message, Exception innerException) : base(message, innerException) { }
         }
         public class InternalServerErrorException : Exception
         {

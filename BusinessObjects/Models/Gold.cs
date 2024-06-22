@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace BusinessObjects.Models;
 
-namespace BusinessObjects.Models;
-
+/// <summary>
+/// Lưu thông tin vàng, giá vàng
+/// </summary>
 public partial class Gold
 {
-    public required string GoldId { get; set; }
+    public int GoldId { get; set; }
     public string? Type { get; set; }
     public string? City { get; set; }
     public float BuyPrice { get; set; }
     public float SellPrice { get; set; }
-    
     public DateTimeOffset? LastUpdated { get; set; }
-    
-    public virtual IList<JewelryMaterial> JewelryMaterials { get; set; } = new List<JewelryMaterial>();
+
+    public virtual IList<JewelryMaterial> JewelryMaterials { get; set; } = [];
 }

@@ -49,7 +49,7 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<CustomerDao>();
         serviceCollection.AddScoped<GoldPriceDao>();
         serviceCollection.AddScoped<JewelryDao>();
-        serviceCollection.AddScoped<JewelryTypeDao>(); 
+        serviceCollection.AddScoped<JewelryTypeDao>();
         serviceCollection.AddScoped<PromotionDao>();
         serviceCollection.AddScoped<PurchaseDao>();
         serviceCollection.AddScoped<RoleDao>();

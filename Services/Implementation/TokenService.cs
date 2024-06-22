@@ -1,9 +1,9 @@
 ﻿using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Services.Interface;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 
@@ -38,7 +38,7 @@ public class TokenService(IConfiguration configuration) : ITokenService
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
         var jwtToken = tokenHandler.WriteToken(token);
-        
+
         var tokenResponse = new TokenResponseDto()
         {
             Token = jwtToken,

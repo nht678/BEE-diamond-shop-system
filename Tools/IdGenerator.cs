@@ -2,7 +2,7 @@
 public static class IdGenerator
 {
     private static readonly Random Random = new Random();
-    private const string? Chars  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    private const string? Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     public static string GenerateId()
     {
         var id = new char[7];

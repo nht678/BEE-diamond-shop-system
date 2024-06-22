@@ -1,10 +1,13 @@
 ﻿namespace BusinessObjects.Models;
 
+/// <summary>
+/// Phiếu bảo hành
+/// </summary>
 public partial class Warranty
 {
-    public required string WarrantyId { get; set; }
-    
-    public string? JewelryId { get; set; }
+    public int WarrantyId { get; set; }
+
+    public int JewelryId { get; set; }
 
     public string? Description { get; set; }
 

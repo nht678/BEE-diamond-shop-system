@@ -1,7 +1,6 @@
 ﻿using BusinessObjects.DTO.BillReqRes;
 using Microsoft.Extensions.Configuration;
 using MongoDB.Driver;
-using Tools;
 
 namespace Repositories.Implementation;
 
@@ -18,7 +17,6 @@ public class BillDetailRepository : IBillDetailRepository
 
     public async Task AddBillDetail(BillDetailDto billDetail)
     {
-        billDetail.Id = IdGenerator.GenerateId();
         await _collection.InsertOneAsync(billDetail);
     }
 
@@ -27,7 +25,7 @@ public class BillDetailRepository : IBillDetailRepository
         return await _collection.Find(x => true).ToListAsync();
     }
 
-    public async Task<BillDetailDto> GetBillDetail(string billId)
+    public async Task<BillDetailDto> GetBillDetail(int billId)
     {
         return await _collection.Find(x => x.BillId == billId).FirstOrDefaultAsync();
     }

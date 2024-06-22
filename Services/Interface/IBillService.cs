@@ -1,6 +1,5 @@
 ﻿using BusinessObjects.DTO.Bill;
 using BusinessObjects.DTO.BillReqRes;
-using BusinessObjects.Models;
 
 namespace Services.Interface
 {
@@ -8,6 +7,6 @@ namespace Services.Interface
     {
         public Task<BillResponseDto> Create(BillRequestDto entity);
         public Task<IEnumerable<BillDetailDto?>?> GetBills();
-        public Task<BillDetailDto?> GetById(string id);
+        public Task<BillDetailDto?> GetById(int id);
     }
 }

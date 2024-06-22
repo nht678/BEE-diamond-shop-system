@@ -6,6 +6,6 @@ namespace Services.Interface;
 public interface IRoleService
 {
     public Task<IEnumerable<Role?>?> Gets();
-    public Task<Role?> GetById(string id);
+    public Task<Role?> GetById(int id);
     public Task<int> Create(RoleDto entity);
 }

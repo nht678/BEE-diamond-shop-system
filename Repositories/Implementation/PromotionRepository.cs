@@ -14,7 +14,7 @@ namespace Repositories.Implementation
             return result;
         }
 
-        public async Task<int> Delete(string id)
+        public async Task<int> Delete(int id)
         {
             return await PromotionDao.DeletePromotion(id);
         }
@@ -24,12 +24,12 @@ namespace Repositories.Implementation
             return await PromotionDao.GetPromotions();
         }
 
-        public Task<Promotion?> GetById(string id)
+        public Task<Promotion?> GetById(int id)
         {
             return PromotionDao.GetPromotionById(id);
         }
 
-        public async Task<int> Update(string id, Promotion promotion)
+        public async Task<int> Update(int id, Promotion promotion)
         {
             return await PromotionDao.UpdatePromotion(id, promotion);
         }

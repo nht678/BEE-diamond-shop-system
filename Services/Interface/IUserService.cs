@@ -9,8 +9,8 @@ namespace Services.Interface
         public Task<IEnumerable<User?>?> GetUsers();
         public Task<bool> IsUser(LoginDto loginDto);
         public Task<int> AddUser(UserDto userDto);
-        public Task<int> UpdateUser(string id, UserDto userDto);
-        public Task<User?> GetUserById(string id);
-        public Task<int> DeleteUser(string id);
+        public Task<int> UpdateUser(int id, UserDto userDto);
+        public Task<User?> GetUserById(int id);
+        public Task<int> DeleteUser(int id);
     }
 }

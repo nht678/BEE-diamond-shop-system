@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace BusinessObjects.Models;
 
-namespace BusinessObjects.Models;
-
+/// <summary>
+/// Quầy hàng
+/// </summary>
 public partial class Counter
 {
-    public required string CounterId { get; set; }
-    public int? Number { get; set; }
-    
+    public int CounterId { get; set; }
+    /// <summary>
+    /// Quầy ở vị trí số mấy
+    /// </summary>
+    public int Number { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
-
-    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
+    public virtual ICollection<User> Users { get; set; } = [];
+    public virtual ICollection<Bill> Bills { get; set; } = [];
 }

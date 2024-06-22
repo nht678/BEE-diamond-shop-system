@@ -2,7 +2,6 @@
 using BusinessObjects.Models;
 using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -18,17 +17,16 @@ namespace DAO
         {
             return await _context.Warranties.ToListAsync();
         }
-        public async Task<Warranty?> GetWarrantyById(string id)
+        public async Task<Warranty?> GetWarrantyById(int id)
         {
-            return await _context.Warranties.FirstOrDefaultAsync(w=>w.WarrantyId == id);
+            return await _context.Warranties.FirstOrDefaultAsync(w => w.WarrantyId == id);
         }
         public async Task<int> CreateWarranty(Warranty warranty)
         {
-            warranty.WarrantyId = IdGenerator.GenerateId();
             _context.Warranties.Add(warranty);
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> UpdateWarranty(string id, Warranty warranty)
+        public async Task<int> UpdateWarranty(int id, Warranty warranty)
         {
             var existingWarranty = await _context.Warranties
                 .FirstOrDefaultAsync(w => w.WarrantyId == id);
@@ -38,7 +36,7 @@ namespace DAO
             _context.Entry(existingWarranty).State = EntityState.Modified;
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> DeleteWarranty(string id)
+        public async Task<int> DeleteWarranty(int id)
         {
             var warranty = await _context.Warranties.FindAsync(id);
             if (warranty == null) return 0;

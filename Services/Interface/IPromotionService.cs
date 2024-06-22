@@ -7,8 +7,8 @@ namespace Services.Interface
     {
         public Task<int> CreatePromotion(PromotionDto promotion);
         public Task<IEnumerable<Promotion?>?> GetPromotions();
-        public Task<Promotion?> GetPromotionById(string id);
-        public Task<int> UpdatePromotion(string id, PromotionDto promotion);
-        public Task<int> DeletePromotion(string id);
+        public Task<Promotion?> GetPromotionById(int id);
+        public Task<int> UpdatePromotion(int id, PromotionDto promotion);
+        public Task<int> DeletePromotion(int id);
     }
 }

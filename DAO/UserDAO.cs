@@ -1,8 +1,6 @@
 ﻿using BusinessObjects.Context;
 using BusinessObjects.Models;
-using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -29,24 +27,23 @@ namespace DAO
         }
         public async Task<int> CreateUser(User user)
         {
-            user.UserId = IdGenerator.GenerateId();
             await _context.Users.AddAsync(user);
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> UpdateUser(string id, User user)
+        public async Task<int> UpdateUser(int id, User user)
         {
-           var existUser = await _context.Users.FirstOrDefaultAsync(x => x.UserId == id);
-           if (existUser == null) return 0;
-           user.UserId = id;
-           _context.Entry(existUser).CurrentValues.SetValues(user);
-           _context.Entry(existUser).State = EntityState.Modified;
-           return await _context.SaveChangesAsync();
+            var existUser = await _context.Users.FirstOrDefaultAsync(x => x.UserId == id);
+            if (existUser == null) return 0;
+            user.UserId = id;
+            _context.Entry(existUser).CurrentValues.SetValues(user);
+            _context.Entry(existUser).State = EntityState.Modified;
+            return await _context.SaveChangesAsync();
         }
-        public async Task<User?> GetUserById(string id)
+        public async Task<User?> GetUserById(int id)
         {
             return await _context.Users.FindAsync(id);
         }
-        public async Task<int> DeleteUser(string id)
+        public async Task<int> DeleteUser(int id)
         {
             var user = await _context.Users.FindAsync(id);
             if (user == null) return 0;

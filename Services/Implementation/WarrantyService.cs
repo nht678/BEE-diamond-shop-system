@@ -1,13 +1,8 @@
-﻿using BusinessObjects.Models;
+﻿using AutoMapper;
+using BusinessObjects.DTO;
+using BusinessObjects.Models;
 using Repositories.Interface;
 using Services.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using BusinessObjects.DTO;
 
 namespace Services.Implementation
 {
@@ -22,7 +17,7 @@ namespace Services.Implementation
             return WarrantyRepository.Create(warranty);
         }
 
-        public Task<int> DeleteWarranty(string id)
+        public Task<int> DeleteWarranty(int id)
         {
             throw new NotImplementedException();
         }
@@ -32,15 +27,15 @@ namespace Services.Implementation
             return await WarrantyRepository.Gets();
         }
 
-        public async Task<Warranty?> GetWarrantyById(string id)
+        public async Task<Warranty?> GetWarrantyById(int id)
         {
             return await WarrantyRepository.GetById(id);
         }
 
-        public async Task<int> UpdateWarranty(string id,WarrantyDto warrantyDto)
+        public async Task<int> UpdateWarranty(int id, WarrantyDto warrantyDto)
         {
             var warranty = Mapper.Map<Warranty>(warrantyDto);
-            return await WarrantyRepository.Update(id,warranty);
+            return await WarrantyRepository.Update(id, warranty);
         }
     }
 }

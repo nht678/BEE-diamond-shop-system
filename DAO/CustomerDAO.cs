@@ -2,7 +2,6 @@
 using BusinessObjects.Models;
 using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -17,17 +16,16 @@ namespace DAO
         {
             return await _context.Customers.ToListAsync();
         }
-        public async Task<Customer?> GetCustomerById(string id)
+        public async Task<Customer?> GetCustomerById(int id)
         {
             return await _context.Customers.FindAsync(id);
         }
         public async Task<int> CreateCustomer(Customer customer)
         {
-            customer.CustomerId = IdGenerator.GenerateId();
             _context.Customers.Add(customer);
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> UpdateCustomer(string id,Customer customer)
+        public async Task<int> UpdateCustomer(int id, Customer customer)
         {
             var existingCustomer = await _context.Customers
                 .FirstOrDefaultAsync(c => c.CustomerId == id);
@@ -37,7 +35,7 @@ namespace DAO
             _context.Entry(existingCustomer).State = EntityState.Modified;
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> DeleteCustomer(string id)
+        public async Task<int> DeleteCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);
             if (customer == null)
@@ -47,7 +45,7 @@ namespace DAO
             _context.Customers.Remove(customer);
             return await _context.SaveChangesAsync();
         }
-        public async Task<Customer?> GetCustomerByBillId(int? billId)
+        public async Task<Customer?> GetCustomerByBillId(int billId)
         {
             var bill = await _context.Bills.FindAsync(billId);
             if (bill == null) return null;

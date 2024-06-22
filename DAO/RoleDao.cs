@@ -1,8 +1,6 @@
 ﻿using BusinessObjects.Context;
 using BusinessObjects.Models;
-using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO;
 
@@ -13,9 +11,9 @@ public class RoleDao
     {
         _context = new JssatsContext();
     }
-    public async Task<Role?> GetRoleById(string id)
+    public async Task<Role?> GetRoleById(int id)
     {
-        return await _context.Roles.FirstOrDefaultAsync(r=>r.RoleId == id);
+        return await _context.Roles.FirstOrDefaultAsync(r => r.RoleId == id);
     }
     public async Task<IEnumerable<Role?>?> GetRoles()
     {
@@ -23,7 +21,6 @@ public class RoleDao
     }
     public async Task<int> CreateRole(Role role)
     {
-        role.RoleId = IdGenerator.GenerateId();
         _context.Roles.Add(role);
         return await _context.SaveChangesAsync();
     }

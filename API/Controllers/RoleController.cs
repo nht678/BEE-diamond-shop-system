@@ -1,5 +1,4 @@
 ﻿using BusinessObjects.DTO;
-using Management.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 
@@ -17,7 +16,7 @@ public class RoleController(IRoleService roleService) : ControllerBase
         return Ok(await roleService.Gets());
     }
     [HttpGet("GetRoleById/{roleId}")]
-    public async Task<IActionResult> GetRoleById(string roleId)
+    public async Task<IActionResult> GetRoleById(int roleId)
     {
         return Ok(await roleService.GetById(roleId));
     }

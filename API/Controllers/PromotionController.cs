@@ -16,7 +16,7 @@ namespace API.Controllers
             return Ok(result);
         }
         [HttpGet("GetPromotionById/{id}")]
-        public async Task<IActionResult> GetPromotionById(string id)
+        public async Task<IActionResult> GetPromotionById(int id)
         {
             var result = await PromotionService.GetPromotionById(id);
             return Ok(result);
@@ -28,14 +28,14 @@ namespace API.Controllers
             return Ok(result);
         }
         [HttpDelete("DeletePromotion")]
-        public async Task<IActionResult> DeletePromotion(string id)
+        public async Task<IActionResult> DeletePromotion(int id)
         {
             var result = await PromotionService.DeletePromotion(id);
             return Ok(result);
         }
 
         [HttpPut("UpdatePromotion")]
-        public async Task<IActionResult> UpdatePromotion(string id, PromotionDto promotionDto)
+        public async Task<IActionResult> UpdatePromotion(int id, PromotionDto promotionDto)
         {
             var result = await PromotionService.UpdatePromotion(id, promotionDto);
             return Ok(result);

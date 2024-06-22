@@ -1,8 +1,6 @@
 ﻿using BusinessObjects.Context;
 using BusinessObjects.Models;
-using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -18,20 +16,19 @@ namespace DAO
             return await _context.Jewelries.ToListAsync();
         }
 
-        public async Task<Jewelry?> GetJewelryById(string id)
+        public async Task<Jewelry?> GetJewelryById(int id)
         {
-           var jewelry = await _context.Jewelries.FirstOrDefaultAsync(p => p.JewelryId == id);
-           return jewelry;
+            var jewelry = await _context.Jewelries.FirstOrDefaultAsync(p => p.JewelryId == id);
+            return jewelry;
         }
 
         public async Task<int> CreateJewelry(Jewelry jewelry)
         {
-            jewelry.JewelryId = IdGenerator.GenerateId();
             _context.Jewelries.Add(jewelry);
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> UpdateJewelry(string id, Jewelry jewelry)
+        public async Task<int> UpdateJewelry(int id, Jewelry jewelry)
         {
             var existingJewelry = await _context.Jewelries
                 .FirstOrDefaultAsync(w => w.JewelryId == id);
@@ -42,7 +39,7 @@ namespace DAO
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> DeleteJewelry(string id)
+        public async Task<int> DeleteJewelry(int id)
         {
             var jewelry = await _context.Jewelries.FindAsync(id);
             _context.Jewelries.Remove(jewelry);
@@ -53,7 +50,7 @@ namespace DAO
             var jewelry = await _context.Jewelries.FindAsync(id);
             return jewelry?.IsSold ?? false;
         }
-        public async Task<IEnumerable<Jewelry>> GetJewelriesByBillId(string billId)
+        public async Task<IEnumerable<Jewelry>> GetJewelriesByBillId(int billId)
         {
             return await _context.Jewelries
                 .Where(j => j.BillJewelries.Any(bj => bj.BillId == billId))

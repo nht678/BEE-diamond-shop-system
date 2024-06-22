@@ -1,24 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace BusinessObjects.Models;
 
+/// <summary>
+/// Mua hàng của khách hàng
+/// </summary>
 public partial class Purchase
 {
-    public required string PurchaseId { get; set; }
+    public int PurchaseId { get; set; }
+    /// <summary>
+    /// người mua, người bán 
+    /// </summary>
+    public int CustomerId { get; set; }
 
-    public string? CustomerId { get; set; }
+    /// <summary>
+    /// Người mua
+    /// </summary>
+    public int UserId { get; set; }
 
-    public string? UserId { get; set; }
-
-    public string? JewelryId { get; set; }
+    /// <summary>
+    /// Trạng sức
+    /// </summary>
+    public int JewelryId { get; set; }
 
     public DateTimeOffset? PurchaseDate { get; set; }
-
     public double? PurchasePrice { get; set; }
-
-    public int? IsBuyBack { get; set; }
+    /// <summary>
+    /// 
+    /// </summary>
+    public int IsBuyBack { get; set; }
 
     public virtual Customer? Customer { get; set; }
     public virtual Jewelry? Jewelry { get; set; }

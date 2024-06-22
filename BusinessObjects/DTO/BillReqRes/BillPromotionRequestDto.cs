@@ -2,5 +2,5 @@
 
 public class BillPromotionRequestDto
 {
-    public string? PromotionId { get; set; }
+    public int PromotionId { get; set; }
 }

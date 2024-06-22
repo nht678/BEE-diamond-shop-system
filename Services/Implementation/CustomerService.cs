@@ -18,12 +18,12 @@ namespace Services.Implementation
             return await CustomerRepository.Create(customer);
         }
 
-        public async Task<int> DeleteCustomer(string id)
+        public async Task<int> DeleteCustomer(int id)
         {
             return await CustomerRepository.Delete(id);
         }
 
-        public async Task<CustomerResponseDto?> GetCustomerById(string id)
+        public async Task<CustomerResponseDto?> GetCustomerById(int id)
         {
             var customer = await CustomerRepository.GetById(id);
             var responseCustomer = Mapper.Map<CustomerResponseDto>(customer);
@@ -37,7 +37,7 @@ namespace Services.Implementation
             return responseCustomers;
         }
 
-        public async Task<int> UpdateCustomer(string id, CustomerDto customerDto)
+        public async Task<int> UpdateCustomer(int id, CustomerDto customerDto)
         {
             var customer = Mapper.Map<Customer>(customerDto);
             return await CustomerRepository.Update(id, customer);

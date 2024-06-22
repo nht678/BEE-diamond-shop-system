@@ -1,15 +1,14 @@
-﻿using System.Globalization;
-using AutoMapper;
+﻿using AutoMapper;
 using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 using HtmlAgilityPack;
 using Repositories.Interface;
 using Services.Interface;
-using Tools;
+using System.Globalization;
 
 namespace Services.Implementation;
 
-public class GoldPriceService(IGoldPriceRepository goldPriceRepository,IMapper mapper) : IGoldPriceService
+public class GoldPriceService(IGoldPriceRepository goldPriceRepository, IMapper mapper) : IGoldPriceService
 {
     public IGoldPriceRepository GoldPriceRepository { get; } = goldPriceRepository;
     public IMapper Mapper { get; } = mapper;
@@ -33,44 +32,61 @@ public class GoldPriceService(IGoldPriceRepository goldPriceRepository,IMapper m
 
         // Retrieve existing gold prices
         var existingGoldPrices = await GoldPriceRepository.Gets();
+        var goldPriceDict = existingGoldPrices?.ToDictionary(gp => (gp.City?.Trim().ToLower(), gp.Type?.Trim().ToLower()));
+
+        // Collections to hold new and updated gold prices
+        var updatedGoldPrices = new List<Gold>();
+        var newGoldPrices = new List<Gold>();
+
         foreach (var cityNode in cities)
         {
             var city = cityNode.Attributes["name"]?.Value;
             var items = cityNode.SelectNodes("item");
 
             if (items == null) continue;
+
             foreach (var itemNode in items)
             {
                 var buyPrice = itemNode.Attributes["buy"]?.Value;
                 var sellPrice = itemNode.Attributes["sell"]?.Value;
                 var type = itemNode.Attributes["type"]?.Value;
-                
-                var existingGoldPrice = existingGoldPrices.FirstOrDefault(gp => gp.City == city && gp.Type == type);
 
-                if (existingGoldPrice != null)
+                var key = (city?.Trim().ToLower(), type?.Trim().ToLower());
+
+                if (goldPriceDict != null && goldPriceDict.TryGetValue(key, out var existingGoldPrice))
                 {
                     // Update existing gold price
                     existingGoldPrice.BuyPrice = float.Parse(buyPrice);
                     existingGoldPrice.SellPrice = float.Parse(sellPrice);
                     existingGoldPrice.LastUpdated = ParseAndUpdateTime(updateTime) ?? DateTime.UtcNow;
-                    await GoldPriceRepository.Update(existingGoldPrice);
+                    updatedGoldPrices.Add(existingGoldPrice);
                 }
                 else
                 {
-                    // Create new gold price
                     var newGoldPrice = new Gold
                     {
-                        GoldId = IdGenerator.GenerateId(),
                         City = city,
                         BuyPrice = float.Parse(buyPrice),
                         SellPrice = float.Parse(sellPrice),
                         Type = type,
                         LastUpdated = ParseAndUpdateTime(updateTime) ?? DateTime.UtcNow
                     };
-                    await GoldPriceRepository.Create(newGoldPrice);
+                    newGoldPrices.Add(newGoldPrice);
                 }
             }
         }
+
+        // Perform batch updates and inserts
+        if (updatedGoldPrices.Count != 0)
+        {
+            await GoldPriceRepository.UpdateBatch(updatedGoldPrices);
+        }
+
+        if (newGoldPrices.Count != 0)
+        {
+            await GoldPriceRepository.CreateBatch(newGoldPrices);
+        }
+
         var finalGoldPrices = await GoldPriceRepository.Gets();
         return Mapper.Map<IEnumerable<GoldPriceResponseDto>>(finalGoldPrices);
     }
@@ -91,5 +107,4 @@ public class GoldPriceService(IGoldPriceRepository goldPriceRepository,IMapper m
         }
         return null;
     }
-
 }

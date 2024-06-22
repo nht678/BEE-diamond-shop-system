@@ -11,13 +11,13 @@ namespace Management.Interface
         public Task<TokenResponseDto?> Login(LoginDto loginDto);
         //Bill
         public Task<IEnumerable<BillDetailDto?>?> GetBills();
-        public Task<BillDetailDto?> GetBillById(string id);
+        public Task<BillDetailDto?> GetBillById(int id);
         public Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto);
         //Crud User
         public Task<IEnumerable<User?>?> GetUsers();
-        public Task<User?> GetUserById(string id);
+        public Task<User?> GetUserById(int id);
         public Task<int> AddUser(UserDto userDto);
-        public Task<int> UpdateUser(string id, UserDto userDto);
-        public Task<int> DeleteUser(string id);
+        public Task<int> UpdateUser(int id, UserDto userDto);
+        public Task<int> DeleteUser(int id);
     }
 }

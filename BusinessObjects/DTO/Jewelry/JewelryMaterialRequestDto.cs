@@ -2,9 +2,9 @@
 
 public class JewelryMaterialRequestDto
 {
-    public string? GemId { get; set; }
-    public string? GoldId { get; set; }
-    
+    public int GemId { get; set; }
+    public int GoldId { get; set; }
+
     public float GoldQuantity { get; set; }
     public float GemQuantity { get; set; }
 }
