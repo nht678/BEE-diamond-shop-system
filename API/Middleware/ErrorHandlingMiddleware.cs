@@ -1,7 +1,7 @@
 ﻿
+using Microsoft.Extensions.Primitives;
 using System.Net;
 using System.Text.Json;
-using Microsoft.Extensions.Primitives;
 using Tools;
 
 namespace API.Middleware
@@ -9,11 +9,11 @@ namespace API.Middleware
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-        
+
         public ErrorHandlingMiddleware(RequestDelegate next)
         {
             _next = next;
-        }   
+        }
 
         public async Task Invoke(HttpContext context)
         {
@@ -41,7 +41,7 @@ namespace API.Middleware
                 error = ex.Message
             });
             context.Response.ContentType = "application/json";
-            var header = new KeyValuePair<string, StringValues>("Access-Control-Allow-Origin","*");
+            var header = new KeyValuePair<string, StringValues>("Access-Control-Allow-Origin", "*");
             context.Response.Headers.Add(header);
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             return context.Response.WriteAsync(result);

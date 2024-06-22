@@ -1,7 +1,6 @@
 ﻿using BusinessObjects.Models;
 using DAO;
 using Repositories.Interface;
-using Repositories.Interface.GenericRepository;
 
 namespace Repositories.Implementation;
 

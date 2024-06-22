@@ -27,8 +27,8 @@ namespace Services.Implementation
             var users = await UserRepository.Find(a => a.Email == loginDto.Email && a.Password == loginDto.Password);
             return users.Any();
         }
-        
-        public async Task<int> UpdateUser(string id, UserDto userDto)
+
+        public async Task<int> UpdateUser(int id, UserDto userDto)
         {
             var user = Mapper.Map<User>(userDto);
             return await UserRepository.Update(id, user);
@@ -40,12 +40,12 @@ namespace Services.Implementation
             return await UserRepository.Create(user);
         }
 
-        public Task<User?> GetUserById(string id)
+        public Task<User?> GetUserById(int id)
         {
             return UserRepository.GetById(id);
         }
 
-        public Task<int> DeleteUser(string id)
+        public Task<int> DeleteUser(int id)
         {
             return UserRepository.Delete(id);
         }

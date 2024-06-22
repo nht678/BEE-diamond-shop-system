@@ -7,8 +7,8 @@ namespace Services.Interface
     {
         public Task<int> CreateWarranty(WarrantyDto warranty);
         public Task<IEnumerable<Warranty?>?> GetWarranties();
-        public Task<Warranty?> GetWarrantyById(string id);
-        public Task<int> UpdateWarranty(string id ,WarrantyDto warranty);
-        public Task<int> DeleteWarranty(string id);
+        public Task<Warranty?> GetWarrantyById(int id);
+        public Task<int> UpdateWarranty(int id, WarrantyDto warranty);
+        public Task<int> DeleteWarranty(int id);
     }
 }

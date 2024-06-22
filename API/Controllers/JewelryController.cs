@@ -1,11 +1,8 @@
 ﻿
 using AutoMapper;
-using BusinessObjects.DTO;
 using BusinessObjects.DTO.Jewelry;
-using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
-using Services;
 using Services.Interface;
 
 namespace API.Controllers;
@@ -24,7 +21,7 @@ public class JewelryController(IJewelryService jewelryService, IMapper mapper) :
         return Ok(jewelries);
     }
     [HttpGet("GetJewelryById/{id}")]
-    public async Task<IActionResult> GetJewelryById(string id)
+    public async Task<IActionResult> GetJewelryById(int id)
     {
         var jewelry = await JewelryService.GetJewelryById(id);
         if (jewelry == null) return NotFound();
@@ -37,14 +34,14 @@ public class JewelryController(IJewelryService jewelryService, IMapper mapper) :
         return Ok(result);
     }
     [HttpPut("UpdateJewelry/{id}")]
-    public async Task<IActionResult> UpdateJewelry(string id, JewelryRequestDto jewelryRequestDto)
+    public async Task<IActionResult> UpdateJewelry(int id, JewelryRequestDto jewelryRequestDto)
     {
         var jewelry = Mapper.Map<Jewelry>(jewelryRequestDto);
         var result = await JewelryService.UpdateJewelry(id, jewelry);
         return Ok(result);
     }
     [HttpDelete("DeleteJewelry/{id}")]
-    public async Task<IActionResult> DeleteJewelry(string id)
+    public async Task<IActionResult> DeleteJewelry(int id)
     {
         var result = await JewelryService.DeleteJewelry(id);
         return Ok(result);

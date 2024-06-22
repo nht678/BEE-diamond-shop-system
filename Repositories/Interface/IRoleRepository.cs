@@ -5,5 +5,5 @@ namespace Repositories.Interface;
 
 public interface IRoleRepository : IReadRepository<Role>, ICreateRepository<Role>
 {
-    
+
 }

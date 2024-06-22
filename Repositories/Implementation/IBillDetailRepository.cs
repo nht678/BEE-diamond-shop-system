@@ -6,5 +6,5 @@ public interface IBillDetailRepository
 {
     Task AddBillDetail(BillDetailDto billDetail);
     Task<IEnumerable<BillDetailDto>> GetBillDetails();
-    Task<BillDetailDto> GetBillDetail(string billId);
+    Task<BillDetailDto> GetBillDetail(int billId);
 }

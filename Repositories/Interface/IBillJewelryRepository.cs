@@ -5,5 +5,5 @@ namespace Repositories.Interface;
 
 public interface IBillJewelryRepository : ICreateRepository<BillJewelry>
 {
-    
+
 }

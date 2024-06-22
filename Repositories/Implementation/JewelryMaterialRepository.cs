@@ -13,7 +13,7 @@ public class JewelryMaterialRepository(JewelryMaterialDao jewelryMaterialDao) : 
         return await JewelryMaterialDao.GetJewelryMaterials();
     }
 
-    public async Task<JewelryMaterial?> GetById(string id)
+    public async Task<JewelryMaterial?> GetById(int id)
     {
         return await JewelryMaterialDao.GetJewelryMaterialById(id);
     }
@@ -23,7 +23,7 @@ public class JewelryMaterialRepository(JewelryMaterialDao jewelryMaterialDao) : 
         return await JewelryMaterialDao.CreateJewelryMaterial(entity);
     }
 
-    public async Task<int> Delete(string id)
+    public async Task<int> Delete(int id)
     {
         return await JewelryMaterialDao.DeleteJewelryMaterial(id);
     }

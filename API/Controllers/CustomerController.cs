@@ -1,5 +1,4 @@
 ﻿using BusinessObjects.DTO;
-using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
 
@@ -16,7 +15,7 @@ public class CustomerController(ICustomerService customerService) : ControllerBa
         return Ok(await CustomerService.GetCustomers());
     }
     [HttpGet("GetCustomerById/{id}")]
-    public async Task<IActionResult> GetCustomerById(string id)
+    public async Task<IActionResult> GetCustomerById(int id)
     {
         return Ok(await CustomerService.GetCustomerById(id));
     }
@@ -27,13 +26,13 @@ public class CustomerController(ICustomerService customerService) : ControllerBa
         return Ok(result);
     }
     [HttpPut("UpdateCustomer/{id}")]
-    public async Task<IActionResult> UpdateCustomer(string id, CustomerDto customer)
+    public async Task<IActionResult> UpdateCustomer(int id, CustomerDto customer)
     {
-        var result = await CustomerService.UpdateCustomer(id ,customer);
+        var result = await CustomerService.UpdateCustomer(id, customer);
         return Ok(result);
     }
     [HttpDelete("DeleteCustomer/{id}")]
-    public async Task<IActionResult> DeleteCustomer(string id)
+    public async Task<IActionResult> DeleteCustomer(int id)
     {
         var result = await CustomerService.DeleteCustomer(id);
         return Ok(result);

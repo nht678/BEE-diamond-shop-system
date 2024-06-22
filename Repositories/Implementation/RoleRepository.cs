@@ -13,7 +13,7 @@ public class RoleRepository(RoleDao roleDao) : IRoleRepository
         return await RoleDao.GetRoles();
     }
 
-    public async Task<Role?> GetById(string id)
+    public async Task<Role?> GetById(int id)
     {
         return await RoleDao.GetRoleById(id);
     }

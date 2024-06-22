@@ -5,5 +5,5 @@ namespace Repositories.Interface;
 
 public interface IJewelryMaterialRepository : IReadRepository<JewelryMaterial>, ICreateRepository<JewelryMaterial>, IDeleteRepository<JewelryMaterial>
 {
-    
+
 }

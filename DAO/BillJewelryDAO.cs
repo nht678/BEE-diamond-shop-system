@@ -2,7 +2,6 @@
 using BusinessObjects.Models;
 using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -17,19 +16,18 @@ namespace DAO
         {
             return await _context.BillJewelries.ToListAsync();
         }
-        public async Task<BillJewelry?> GetBillJewelryById(string id)
+        public async Task<BillJewelry?> GetBillJewelryById(int id)
         {
             return await _context.BillJewelries.FindAsync(id);
         }
         public async Task<int> CreateBillJewelry(BillJewelry billJewelry)
         {
-            billJewelry.BillJewelryId = IdGenerator.GenerateId();
             _context.BillJewelries.Add(billJewelry);
             return await _context.SaveChangesAsync();
         }
-        public async Task<BillJewelry?> GetBillJewelryByBillId(string billId)
+        public async Task<BillJewelry?> GetBillJewelryByBillId(int billId)
         {
             return await _context.BillJewelries.FirstOrDefaultAsync(b => b.BillId == billId);
-        } 
+        }
     }
 }

@@ -13,7 +13,7 @@ public class GoldPriceRepository(GoldPriceDao goldPriceDao) : IGoldPriceReposito
         return await GoldPriceDao.GetGoldPrices();
     }
 
-    public Task<Gold?> GetById(string id)
+    public Task<Gold?> GetById(int id)
     {
         throw new NotImplementedException();
     }
@@ -26,5 +26,15 @@ public class GoldPriceRepository(GoldPriceDao goldPriceDao) : IGoldPriceReposito
     public async Task<int> Update(Gold entity)
     {
         return await GoldPriceDao.Update(entity);
+    }
+
+    public async Task UpdateBatch(List<Gold> goldPrices)
+    {
+        await GoldPriceDao.UpdateBatch(goldPrices);
+    }
+
+    public async Task CreateBatch(List<Gold> goldPrices)
+    {
+        await GoldPriceDao.CreateBatch(goldPrices);
     }
 }

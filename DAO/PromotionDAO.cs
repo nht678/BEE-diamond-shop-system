@@ -2,7 +2,6 @@
 using BusinessObjects.Models;
 using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -19,18 +18,17 @@ namespace DAO
         {
             return await _context.Promotions.ToListAsync();
         }
-        public async Task<Promotion?> GetPromotionById(string id)
+        public async Task<Promotion?> GetPromotionById(int id)
         {
             return await _context.Promotions.FindAsync(id);
         }
         public async Task<int> CreatePromotion(Promotion promotion)
         {
-            promotion.PromotionId = IdGenerator.GenerateId();
             await _context.Promotions.AddAsync(promotion);
             return await _context.SaveChangesAsync();
         }
-        
-        public async Task<int> UpdatePromotion(string id, Promotion promotion)
+
+        public async Task<int> UpdatePromotion(int id, Promotion promotion)
         {
             var existPromotion = await _context.Promotions.FirstOrDefaultAsync(x => x.PromotionId == id);
             if (existPromotion == null) return 0;
@@ -43,7 +41,7 @@ namespace DAO
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<int> DeletePromotion(string id)
+        public async Task<int> DeletePromotion(int id)
         {
             var existPromotion = await _context.Promotions.FirstOrDefaultAsync(x => x.PromotionId == id);
             if (existPromotion == null) return 0;

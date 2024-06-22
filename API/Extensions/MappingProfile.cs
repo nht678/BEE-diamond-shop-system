@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using BusinessObjects.DTO;
-using BusinessObjects.DTO.Bill;
 using BusinessObjects.DTO.BillReqRes;
 using BusinessObjects.DTO.Jewelry;
 using BusinessObjects.DTO.ResponseDto;

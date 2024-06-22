@@ -19,17 +19,17 @@ namespace Repositories.Implementation
             return await CustomerDao.GetCustomers();
         }
 
-        public async Task<Customer?> GetById(string id)
+        public async Task<Customer?> GetById(int id)
         {
             return await CustomerDao.GetCustomerById(id);
         }
 
-        public Task<int> Update(string id, Customer entity)
+        public Task<int> Update(int id, Customer entity)
         {
             return CustomerDao.UpdateCustomer(id, entity);
         }
 
-        public async Task<int> Delete(string id)
+        public async Task<int> Delete(int id)
         {
             return await CustomerDao.DeleteCustomer(id);
         }

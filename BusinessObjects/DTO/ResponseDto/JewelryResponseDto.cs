@@ -1,10 +1,8 @@
-﻿using BusinessObjects.Models;
-
-namespace BusinessObjects.DTO.ResponseDto;
+﻿namespace BusinessObjects.DTO.ResponseDto;
 
 public class JewelryResponseDto
 {
-    public string? JewelryId { get; set; }
+    public int JewelryId { get; set; }
     public string? Name { get; set; }
     public string? Type { get; set; }
     public string? Barcode { get; set; }

@@ -24,7 +24,7 @@ namespace Repositories.Implementation
             return await JewelryDao.CreateJewelry(entity);
         }
 
-        public async Task<int> Delete(string id)
+        public async Task<int> Delete(int id)
         {
             return await JewelryDao.DeleteJewelry(id);
         }
@@ -46,11 +46,11 @@ namespace Repositories.Implementation
                 var jewelryMaterialList = new List<JewelryMaterial> { jewelryMaterials };
                 foreach (var jewelryMaterial in jewelryMaterialList)
                 {
-                    var goldType = await GoldPriceDao.GetGoldPriceById(jewelryMaterial.GoldPriceId);
-                    var stoneType = await GemPriceDao.GetStonePriceById(jewelryMaterial.StonePriceId);
+                    var goldType = await GoldPriceDao.GetGoldPriceById(jewelryMaterial.GoldId);
+                    var stoneType = await GemPriceDao.GetStonePriceById(jewelryMaterial.GemId);
 
-                    jewelryMaterial.GoldPrice = goldType;
-                    jewelryMaterial.StonePrice = stoneType;
+                    jewelryMaterial.Gold = goldType;
+                    jewelryMaterial.Gem = stoneType;
                 }
 
                 jewelry.JewelryType = jewelryType;
@@ -69,15 +69,15 @@ namespace Repositories.Implementation
                     {
                         Gold = new GoldResponseDto
                         {
-                            GoldType = jm.GoldPrice?.Type,
-                            GoldQuantity = jm.GoldQuantity,
-                            GoldPrice = jm.GoldPrice?.SellPrice ?? 0
+                            GoldType = jm.Gold?.Type,
+                            GoldQuantity = jm.GoldWeight,
+                            GoldPrice = jm.Gold?.SellPrice ?? 0
                         },
                         Gem = new GemResponseDto
                         {
-                            Gem = jm.StonePrice?.Type,
+                            Gem = jm.Gem?.Type,
                             GemQuantity = jm.StoneQuantity,
-                            GemPrice = jm.StonePrice?.SellPrice ?? 0
+                            GemPrice = jm.Gem?.SellPrice ?? 0
                         }
                     }).ToList(),
                     TotalPrice = totalPrice
@@ -88,17 +88,17 @@ namespace Repositories.Implementation
 
             return jewelryResponseDtos;
         }
-        
-        public async Task<JewelryResponseDto> GetById(string id)
+
+        public async Task<JewelryResponseDto> GetById(int id)
         {
             var jewelry = await JewelryDao.GetJewelryById(id);
             var jewelryType = await JewelryTypeDao.GetJewelryTypeById(jewelry.JewelryTypeId);
             var jewelryMaterial = await JewelryMaterialDao.GetJewelryMaterialByJewelry(id);
-            var goldType = await GoldPriceDao.GetGoldPriceById(jewelryMaterial.GoldPriceId);
-            var stoneType = await GemPriceDao.GetStonePriceById(jewelryMaterial.StonePriceId);
+            var goldType = await GoldPriceDao.GetGoldPriceById(jewelryMaterial.GoldId);
+            var stoneType = await GemPriceDao.GetStonePriceById(jewelryMaterial.GemId);
 
-            jewelryMaterial.GoldPrice = goldType;
-            jewelryMaterial.StonePrice = stoneType;
+            jewelryMaterial.Gold = goldType;
+            jewelryMaterial.Gem = stoneType;
             jewelry.JewelryType = jewelryType;
             jewelry.JewelryMaterials = new List<JewelryMaterial> { jewelryMaterial };
 
@@ -116,15 +116,15 @@ namespace Repositories.Implementation
                 {
                     Gold = new GoldResponseDto
                     {
-                        GoldType = jm.GoldPrice?.Type,
-                        GoldQuantity = jm.GoldQuantity,
-                        GoldPrice = jm.GoldPrice?.SellPrice ?? 0
+                        GoldType = jm.Gold?.Type,
+                        GoldQuantity = jm.GoldWeight,
+                        GoldPrice = jm.Gold?.SellPrice ?? 0
                     },
                     Gem = new GemResponseDto
                     {
-                        Gem = jm.StonePrice?.Type,
+                        Gem = jm.Gem?.Type,
                         GemQuantity = jm.StoneQuantity,
-                        GemPrice = jm.StonePrice?.SellPrice ?? 0
+                        GemPrice = jm.Gem?.SellPrice ?? 0
                     }
                 }).ToList(),
                 TotalPrice = totalPrice
@@ -133,7 +133,7 @@ namespace Repositories.Implementation
             return jewelryResponseDto;
         }
 
-        public async Task<int> Update(string id, Jewelry entity)
+        public async Task<int> Update(int id, Jewelry entity)
         {
             return await JewelryDao.UpdateJewelry(id, entity);
         }
@@ -141,14 +141,14 @@ namespace Repositories.Implementation
         private static float CalculateTotalPrice(JewelryMaterial jewelryMaterial, double? laborCost)
         {
             float totalPrice = 0;
-            if (jewelryMaterial.GoldPrice != null)
+            if (jewelryMaterial.Gold != null)
             {
-                totalPrice += jewelryMaterial.GoldPrice.BuyPrice * jewelryMaterial.GoldQuantity;
+                totalPrice += jewelryMaterial.Gold.BuyPrice * jewelryMaterial.GoldWeight;
             }
 
-            if (jewelryMaterial.StonePrice != null)
+            if (jewelryMaterial.Gem != null)
             {
-                totalPrice += jewelryMaterial.StonePrice.BuyPrice * jewelryMaterial.StoneQuantity;
+                totalPrice += jewelryMaterial.Gem.BuyPrice * jewelryMaterial.StoneQuantity;
             }
 
             totalPrice += (float)laborCost;
@@ -158,14 +158,14 @@ namespace Repositories.Implementation
         private static float CalculateJewelryPrice(JewelryMaterial jewelryMaterial)
         {
             float totalPrice = 0;
-            if (jewelryMaterial.GoldPrice != null)
+            if (jewelryMaterial.Gold != null)
             {
-                totalPrice += jewelryMaterial.GoldPrice.BuyPrice * jewelryMaterial.GoldQuantity;
+                totalPrice += jewelryMaterial.Gold.BuyPrice * jewelryMaterial.GoldWeight;
             }
 
-            if (jewelryMaterial.StonePrice != null)
+            if (jewelryMaterial.Gem != null)
             {
-                totalPrice += jewelryMaterial.StonePrice.BuyPrice * jewelryMaterial.StoneQuantity;
+                totalPrice += jewelryMaterial.Gem.BuyPrice * jewelryMaterial.StoneQuantity;
             }
 
             return totalPrice;

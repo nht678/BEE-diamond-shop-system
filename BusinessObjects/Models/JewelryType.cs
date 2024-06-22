@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
-using Tools;
+﻿namespace BusinessObjects.Models;
 
-namespace BusinessObjects.Models;
-
+/// <summary>
+/// Loại trang sức
+/// </summary>
 public partial class JewelryType
 {
-    public required string JewelryTypeId { get; set; }
+    public int JewelryTypeId { get; set; }
     public string? Name { get; set; }
-    public virtual ICollection<Jewelry> Jewelries { get; set; } = new List<Jewelry>();
+    public virtual ICollection<Jewelry> Jewelries { get; set; } = [];
 }

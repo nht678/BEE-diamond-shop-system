@@ -1,11 +1,10 @@
 ﻿using BusinessObjects.Context;
 using BusinessObjects.Models;
-using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAO;
 
-public class GemPriceDao 
+public class GemPriceDao
 {
     private readonly JssatsContext _context;
     public GemPriceDao()
@@ -16,7 +15,7 @@ public class GemPriceDao
     {
         return await _context.Gems.ToListAsync();
     }
-    public async Task<Gem?> GetStonePriceById(string id)
+    public async Task<Gem?> GetStonePriceById(int id)
     {
         return await _context.Gems.FindAsync(id);
     }

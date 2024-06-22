@@ -13,7 +13,7 @@ public class JewelryTypeService(IJewelryTypeRepository repository) : IJewelryTyp
         return await Repository.Gets();
     }
 
-    public async Task<JewelryType?> GetJewelryById(string id)
+    public async Task<JewelryType?> GetJewelryById(int id)
     {
         return await Repository.GetById(id);
     }
@@ -23,7 +23,7 @@ public class JewelryTypeService(IJewelryTypeRepository repository) : IJewelryTyp
         return await Repository.Create(jewelryType);
     }
 
-    public async Task<int> UpdateJewelry(string id, JewelryType jewelryType)
+    public async Task<int> UpdateJewelry(int id, JewelryType jewelryType)
     {
         return await Repository.Update(id, jewelryType);
     }

@@ -3,7 +3,6 @@ using BusinessObjects.DTO.BillReqRes;
 using BusinessObjects.Models;
 using DAO;
 using Repositories.Interface;
-using Tools;
 
 namespace Repositories.Implementation
 {
@@ -18,21 +17,20 @@ namespace Repositories.Implementation
             return await BillDao.GetBills();
         }
 
-        public async Task<Bill?> GetById(string id)
+        public async Task<Bill?> GetById(int id)
         {
             return await BillDao.GetBillById(id);
         }
-        
+
         public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
         {
             double totalAmount = 999;
             double totalDiscount = 0;
             double finalAmount = 0;
-            
+
             // Create bill
             var bill = new Bill
             {
-                BillId = IdGenerator.GenerateId(),
                 CustomerId = billRequestDto.CustomerId,
                 UserId = billRequestDto.UserId,
                 SaleDate = DateTime.Now.ToUniversalTime(),
@@ -49,7 +47,6 @@ namespace Repositories.Implementation
             {
                 var billJewelry = new BillJewelry
                 {
-                    BillJewelryId = IdGenerator.GenerateId(),
                     BillId = billId,
                     JewelryId = item.JewelryId,
                 };
@@ -60,7 +57,6 @@ namespace Repositories.Implementation
             {
                 var billPromotion = new BillPromotion
                 {
-                    BillPromotionId = IdGenerator.GenerateId(),
                     BillId = billId,
                     PromotionId = promotion.PromotionId,
                 };
@@ -92,7 +88,7 @@ namespace Repositories.Implementation
         {
             throw new NotImplementedException();
         }
-        public async Task<string> CreateBill(Bill entity)
+        public async Task<int> CreateBill(Bill entity)
         {
             return await BillDao.CreateBill(entity);
         }

@@ -1,8 +1,6 @@
 ﻿using BusinessObjects.Context;
 using BusinessObjects.Models;
-using DAO.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Tools;
 
 namespace DAO
 {
@@ -14,14 +12,13 @@ namespace DAO
             return await _context.Bills.ToListAsync();
         }
 
-        public async Task<Bill?> GetBillById(string id)
+        public async Task<Bill?> GetBillById(int id)
         {
             return await _context.Bills.FindAsync(id);
         }
 
-        public async Task<string> CreateBill(Bill bill)
+        public async Task<int> CreateBill(Bill bill)
         {
-            bill.BillId = IdGenerator.GenerateId();
             _context.Bills.Add(bill);
             await _context.SaveChangesAsync();
             return bill.BillId;

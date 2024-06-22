@@ -15,7 +15,7 @@ public class GoldPriceDao
     {
         return await _context.Golds.ToListAsync();
     }
-    public async Task<Gold?> GetGoldPriceById(string id)
+    public async Task<Gold?> GetGoldPriceById(int id)
     {
         return await _context.Golds.FindAsync(id);
     }
@@ -28,5 +28,17 @@ public class GoldPriceDao
     {
         _context.Golds.Update(gold);
         return await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateBatch(List<Gold> goldPrices)
+    {
+        _context.Golds.UpdateRange(goldPrices);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task CreateBatch(List<Gold> goldPrices)
+    {
+        await _context.Golds.AddRangeAsync(goldPrices);
+        await _context.SaveChangesAsync();
     }
 }

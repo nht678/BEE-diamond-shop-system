@@ -5,7 +5,6 @@ using BusinessObjects.Models;
 using Repositories.Implementation;
 using Repositories.Interface;
 using Services.Interface;
-using Tools;
 
 namespace Services.Implementation
 {
@@ -39,7 +38,6 @@ namespace Services.Implementation
             // Create bill
             var bill = new Bill
             {
-                BillId = IdGenerator.GenerateId(),
                 CustomerId = billRequestDto.CustomerId,
                 UserId = billRequestDto.UserId,
                 SaleDate = DateTime.Now.ToUniversalTime(),
@@ -58,7 +56,6 @@ namespace Services.Implementation
             {
                 var billJewelry = new BillJewelry
                 {
-                    BillJewelryId = IdGenerator.GenerateId(),
                     BillId = billId,
                     JewelryId = item.JewelryId,
                 };
@@ -70,7 +67,6 @@ namespace Services.Implementation
             {
                 var billPromotion = new BillPromotion
                 {
-                    BillPromotionId = IdGenerator.GenerateId(),
                     BillId = billId,
                     PromotionId = promotion.PromotionId,
                 };
@@ -144,7 +140,7 @@ namespace Services.Implementation
             return await BillDetailRepository.GetBillDetails();
         }
 
-        public async Task<BillDetailDto?> GetById(string id)
+        public async Task<BillDetailDto?> GetById(int id)
         {
             return await BillDetailRepository.GetBillDetail(id);
         }

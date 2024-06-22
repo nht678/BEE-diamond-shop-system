@@ -1,7 +1,6 @@
 ﻿using BusinessObjects.DTO.Jewelry;
 using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
-using Repositories.Implementation;
 using Repositories.Interface;
 using Services.Interface;
 using Tools;
@@ -21,7 +20,7 @@ namespace Services.Implementation
             return jewelries;
         }
 
-        public async Task<JewelryResponseDto?> GetJewelryById(string id)
+        public async Task<JewelryResponseDto?> GetJewelryById(int id)
         {
             var jewelryResponseDto = await JewelryRepository.GetById(id);
             return jewelryResponseDto;
@@ -33,8 +32,6 @@ namespace Services.Implementation
             // Create Jewelry first before creating JewelryMaterial
             var jewelry = new Jewelry
             {
-                JewelryId = IdGenerator.GenerateId(),
-                JewelryTypeId = jewelryRequestDto.JewelryTypeId,
                 Name = jewelryRequestDto.Name,
                 Barcode = jewelryRequestDto.Barcode,
                 LaborCost = jewelryRequestDto.LaborCost,
@@ -51,11 +48,10 @@ namespace Services.Implementation
             // Create JewelryMaterial
             var jewelryMaterial = new JewelryMaterial
             {
-                JewelryMaterialId = IdGenerator.GenerateId(),
                 JewelryId = jewelry.JewelryId,
-                GoldPriceId = jewelryRequestDto.JewelryMaterial.GoldId,
-                StonePriceId = jewelryRequestDto.JewelryMaterial.GemId,
-                GoldQuantity = jewelryRequestDto.JewelryMaterial.GoldQuantity,
+                GoldId = jewelryRequestDto.JewelryMaterial.GoldId,
+                GemId = jewelryRequestDto.JewelryMaterial.GemId,
+                GoldWeight = jewelryRequestDto.JewelryMaterial.GoldQuantity,
                 StoneQuantity = jewelryRequestDto.JewelryMaterial.GemQuantity
             };
             try
@@ -70,12 +66,12 @@ namespace Services.Implementation
             }
         }
 
-        public Task<int> DeleteJewelry(string id)
+        public Task<int> DeleteJewelry(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<int> UpdateJewelry(string id, Jewelry jewelry)
+        public async Task<int> UpdateJewelry(int id, Jewelry jewelry)
         {
             return await JewelryRepository.Update(id, jewelry);
         }

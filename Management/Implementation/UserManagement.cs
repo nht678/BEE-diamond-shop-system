@@ -8,7 +8,7 @@ using Services.Interface;
 
 namespace Management.Implementation
 {
-    public class UserManagement(IJewelryService jewelryService,IUserService userService, IBillService billService, ITokenService tokenService) : IUserManagement
+    public class UserManagement(IJewelryService jewelryService, IUserService userService, IBillService billService, ITokenService tokenService) : IUserManagement
     {
         public IJewelryService JewelryService { get; } = jewelryService;
         private IUserService UserService { get; } = userService;
@@ -33,17 +33,17 @@ namespace Management.Implementation
             return await BillService.GetBills();
         }
 
-        public async Task<BillDetailDto?> GetBillById(string id)
+        public async Task<BillDetailDto?> GetBillById(int id)
         {
             return await BillService.GetById(id);
         }
-        
+
         public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
         {
             return await BillService.Create(billRequestDto);
         }
 
-        public async Task<User?> GetUserById(string id)
+        public async Task<User?> GetUserById(int id)
         {
             return await UserService.GetUserById(id);
         }
@@ -53,12 +53,12 @@ namespace Management.Implementation
             return await UserService.AddUser(userDto);
         }
 
-        public async Task<int> UpdateUser(string id, UserDto user)
+        public async Task<int> UpdateUser(int id, UserDto user)
         {
             return await UserService.UpdateUser(id, user);
         }
 
-        public async Task<int> DeleteUser(string id)
+        public async Task<int> DeleteUser(int id)
         {
             return await UserService.DeleteUser(id);
         }

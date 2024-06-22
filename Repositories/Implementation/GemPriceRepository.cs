@@ -13,7 +13,7 @@ public class GemPriceRepository(GemPriceDao gemPriceDao) : IGemPriceRepository
         return await GemPriceDao.GetStonePrices();
     }
 
-    public async Task<Gem?> GetById(string id)
+    public async Task<Gem?> GetById(int id)
     {
         return await GemPriceDao.GetStonePriceById(id);
     }

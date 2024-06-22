@@ -23,7 +23,7 @@ namespace Repositories.Implementation
             return user;
         }
 
-        public async Task<User?> GetById(string id)
+        public async Task<User?> GetById(int id)
         {
             var user = await UserDao.GetUserById(id);
             var role = await RoleDao.GetRoleById(user.RoleId);
@@ -31,9 +31,9 @@ namespace Repositories.Implementation
             return user;
         }
 
-        public async Task<int> Update(string id, User entity)
+        public async Task<int> Update(int id, User entity)
         {
-           return await UserDao.UpdateUser(id, entity);
+            return await UserDao.UpdateUser(id, entity);
         }
 
         public async Task<IEnumerable<User?>?> Gets()
@@ -51,7 +51,7 @@ namespace Repositories.Implementation
         {
             return await UserDao.CreateUser(entity);
         }
-        public async Task<int> Delete(string id)
+        public async Task<int> Delete(int id)
         {
             return await UserDao.DeleteUser(id);
         }
