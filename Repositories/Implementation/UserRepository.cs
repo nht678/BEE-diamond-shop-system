@@ -4,11 +4,9 @@ using Repositories.Interface;
 
 namespace Repositories.Implementation
 {
-    public class UserRepository(UserDao userDao, RoleDao roleDao) : IUserRepository
+    public class UserRepository(UserDao userDao) : IUserRepository
     {
         public UserDao UserDao { get; } = userDao;
-        public RoleDao RoleDao { get; } = roleDao;
-
         public Task<IEnumerable<User>> Find(Func<User, bool> predicate)
         {
             throw new NotImplementedException();
@@ -18,16 +16,12 @@ namespace Repositories.Implementation
         {
             var user = await UserDao.GetUser(email, password);
             if (user == null) return null;
-            var role = await RoleDao.GetRoleById(user.RoleId);
-            user.Role = role;
             return user;
         }
 
         public async Task<User?> GetById(int id)
         {
             var user = await UserDao.GetUserById(id);
-            var role = await RoleDao.GetRoleById(user.RoleId);
-            user.Role = role;
             return user;
         }
 
@@ -38,12 +32,7 @@ namespace Repositories.Implementation
 
         public async Task<IEnumerable<User?>?> Gets()
         {
-            var users = await UserDao.GetUsers();
-            foreach (var user in users)
-            {
-                var userRole = await RoleDao.GetRoleById(user.RoleId);
-                user.Role = userRole;
-            }
+            var users = await UserDao.GetUsers(null);
             return users;
         }
 
@@ -54,6 +43,11 @@ namespace Repositories.Implementation
         public async Task<int> Delete(int id)
         {
             return await UserDao.DeleteUser(id);
+        }
+
+        public Task<IEnumerable<User>?> Gets(int? roleId)
+        {
+            return UserDao.GetUsers(roleId);
         }
     }
 }

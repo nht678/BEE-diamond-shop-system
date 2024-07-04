@@ -19,8 +19,8 @@ namespace BusinessObjects.Context
             {
                 //optionsBuilder.UseSqlServer(GetConnectionString());
                 //optionsBuilder.UseNpgsql(GetConnectionString());
-                optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
-                //optionsBuilder.UseNpgsql("Host=aws-0-ap-southeast-1.pooler.supabase.com; Database=postgres; Username=postgres.gfjsnspjzlcfdrzxxksm; Password=Akaka0406+++");
+                optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345678;Database=JSSATS;TrustServerCertificate=True");
+                //optionsBuilder.UseNpgsql("Host=aws-0-ap-southeast-1.pooler.supabase.com; Database=postgres; Code=postgres.gfjsnspjzlcfdrzxxksm; Password=Akaka0406+++");
 
             }
         }
@@ -52,7 +52,6 @@ namespace BusinessObjects.Context
         public DbSet<JewelryType> JewelryTypes { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
-        public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
@@ -94,9 +93,6 @@ namespace BusinessObjects.Context
 
             modelBuilder.Entity<Purchase>()
                 .HasKey(p => p.PurchaseId);
-
-            modelBuilder.Entity<Role>()
-                .HasKey(r => r.RoleId);
 
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
@@ -192,31 +188,20 @@ namespace BusinessObjects.Context
                 .HasForeignKey(u => u.CounterId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<User>()
-                .HasOne(u => u.Role)
-                .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleId)
-                .OnDelete(DeleteBehavior.NoAction);
 
             // Seed data
 
-            modelBuilder.Entity<Role>().HasData(
-                new Role { RoleId = 1, RoleName = "Admin" },
-                new Role { RoleId = 2, RoleName = "Manager" },
-                new Role { RoleId = 3, RoleName = "Staff" }
-            );
-
             modelBuilder.Entity<Counter>().HasData(
-                new Counter { CounterId = 1, Number = 312 },
-                new Counter { CounterId = 2, Number = 231 },
-                new Counter { CounterId = 3, Number = 431 }
+                new Counter { CounterId = 1, Name = "312" },
+                new Counter { CounterId = 2, Name = "231" },
+                new Counter { CounterId = 3, Name = "431" }
             );
 
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     UserId = 1,
-                    Username = "admin Nghia",
+                    Code = "admin Nghia",
                     Password = "5678",
                     Email = "nghialoe46a2gmail.com",
                     RoleId = 1,
@@ -225,7 +210,7 @@ namespace BusinessObjects.Context
                 new User
                 {
                     UserId = 2,
-                    Username = "manager John Doe",
+                    Code = "manager John Doe",
                     Password = "1234",
                     Email = "JohnDoe@gmail.com",
                     RoleId = 2,
@@ -234,7 +219,7 @@ namespace BusinessObjects.Context
                 new User
                 {
                     UserId = 3,
-                    Username = "staff Chis Nguyen",
+                    Code = "staff Chis Nguyen",
                     Password = "4321",
                     Email = "Chis@yahho.com",
                     RoleId = 3,
