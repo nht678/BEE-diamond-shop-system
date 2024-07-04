@@ -21,9 +21,9 @@ namespace Services.Implementation
             return await PromotionRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<Promotion?>?> GetPromotions()
+        public async Task<IEnumerable<Promotion?>?> GetPromotions(bool available)
         {
-            return await PromotionRepository.Gets();
+            return await PromotionRepository.Gets(available);
         }
 
         public Task<Promotion?> GetPromotionById(int id)

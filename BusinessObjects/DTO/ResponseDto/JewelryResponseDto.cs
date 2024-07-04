@@ -8,6 +8,11 @@ public class JewelryResponseDto
     public string? Barcode { get; set; }
     public double? LaborCost { get; set; }
     public float JewelryPrice { get; set; }
+    public int? JewelryTypeId { get; set; }
+    public string? Code { get; set; }
+    public bool? IsSold { get; set; }
+    public string? PreviewImage { get; set; }
+    public int? WarrantyTime { get; set; }
     public IList<Materials>? Materials { get; set; }
     public float TotalPrice { get; set; }
 }

@@ -11,6 +11,7 @@ public partial class Gold
     public float BuyPrice { get; set; }
     public float SellPrice { get; set; }
     public DateTimeOffset? LastUpdated { get; set; }
+    public DateTime? LastFetchTime { get; set; }
 
     public virtual IList<JewelryMaterial> JewelryMaterials { get; set; } = [];
 }

@@ -14,7 +14,7 @@ namespace Management.Interface
         public Task<BillDetailDto?> GetBillById(int id);
         public Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto);
         //Crud User
-        public Task<IEnumerable<User?>?> GetUsers();
+        public Task<IEnumerable<UserDto?>?> GetUsers(int? roleId);
         public Task<User?> GetUserById(int id);
         public Task<int> AddUser(UserDto userDto);
         public Task<int> UpdateUser(int id, UserDto userDto);

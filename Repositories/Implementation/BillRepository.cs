@@ -78,8 +78,7 @@ namespace Repositories.Implementation
                     PromotionId = p.PromotionId,
                     Discount = 0 // Calculate discount
                 }).ToList(),
-                AdditionalDiscount = billRequestDto.AdditionalDiscount,
-                PointsUsed = 0, // Calculate points used
+                 PointsUsed = 0, // Calculate points used
                 FinalAmount = 0 // Calculate final amount
             };
             return billResponseDto;

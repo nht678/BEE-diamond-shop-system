@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using BusinessObjects.Context;
 using BusinessObjects.DTO.Bill;
 using BusinessObjects.DTO.BillReqRes;
 using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Implementation;
 using Repositories.Interface;
 using Services.Interface;
@@ -17,8 +19,11 @@ namespace Services.Implementation
         IBillDetailRepository billDetailRepository,
         ICustomerRepository customerRepository,
         IUserRepository userRepository,
-        IJewelryRepository jewelryRepository) : IBillService
+        IJewelryRepository jewelryRepository,
+        JssatsContext _context) : IBillService
     {
+
+        public JssatsContext Context { get; } = _context;
         public IMapper Mapper { get; } = mapper;
         private IBillRepository BillRepository { get; } = billRepository;
         public IBillPromotionRepository BillPromotionRepository { get; } = billPromotionRepository;
@@ -40,98 +45,128 @@ namespace Services.Implementation
             {
                 CustomerId = billRequestDto.CustomerId,
                 UserId = billRequestDto.UserId,
+                CounterId = billRequestDto.CounterId,
                 SaleDate = DateTime.Now.ToUniversalTime(),
+                CreatedAt = DateTime.Now.ToUniversalTime(),
+                UpdatedAt = DateTime.Now.ToUniversalTime(),
             };
 
-            var billId = await BillRepository.CreateBill(bill);
+            // lấy ra danh sách các sản phẩm có trong database từ billRequestDto
+            var jewelries = await Context.Jewelries
+                        .Where(j => billRequestDto.Jewelries.Select(j => j.JewelryId).Contains(j.JewelryId))
+                        .Include(j => j.JewelryType)
+                        .Include(j => j.JewelryMaterials)
+                            .ThenInclude(jm => jm.Gem)
+                        .Include(j => j.JewelryMaterials)
+                            .ThenInclude(jm => jm.Gold)
+                        .ToListAsync();
 
-            // Check if bill is created
-            if (billId == null)
+            // lấy ra danh sách các khuyến mãi có trong database từ billRequestDto
+            var promotions = new List<Promotion>();
+            if (billRequestDto.Promotions != null && billRequestDto.Promotions.Count() > 0)
             {
-                throw new InvalidOperationException("Failed to create the bill.");
+                promotions = Context.Promotions
+                    .Where(p => billRequestDto.Promotions.Select(p => p.PromotionId).Contains(p.PromotionId)).ToList();
+
             }
 
-            // Add bill items
-            foreach (var item in billRequestDto.Jewelries)
+            // kiểm tra xem danh sách sản phẩm và khuyến mãi có tồn tại trong database không
+            if (jewelries.Count != billRequestDto.Jewelries.Count() || promotions.Count != billRequestDto.Promotions.Count())
             {
+                throw new Exception("Some items are not found in database");
+            }
+
+            // Build billJewelries
+            foreach (var item in jewelries)
+            {
+                var quantity = billRequestDto.Jewelries.First(j => j.JewelryId == item.JewelryId).Quantity;
+                var material = item.JewelryMaterials.FirstOrDefault();
                 var billJewelry = new BillJewelry
                 {
-                    BillId = billId,
                     JewelryId = item.JewelryId,
+                    Quantity = quantity,
+                    LaborCost = item.LaborCost,
+                    GemSellPrice = material.Gem.SellPrice,
+                    GoldSellPrice = material.Gold.SellPrice,
+                    GoldWeight = material.GoldWeight,
+                    StoneQuantity = material.StoneQuantity,
+                    CreatedAt = DateTime.Now.ToUniversalTime(),
+                    UpdatedAt = DateTime.Now.ToUniversalTime()
                 };
-                await BillJewelryRepository.Create(billJewelry);
+                // totalPrice = [giá vàng thời điểm * trọng lượng sản phẩm] + tiền công + tiền đá
+                billJewelry.TotalAmount = (billJewelry.GoldSellPrice * billJewelry.GoldWeight) + billJewelry.LaborCost + (billJewelry.GemSellPrice * billJewelry.StoneQuantity);
+                billJewelry.TotalAmount *= quantity; // nếu có nhiều sản phẩm cùng loại
+                bill.TotalAmount += billJewelry.TotalAmount; // tổng tiền của bill
+                bill.BillJewelries.Add(billJewelry);
             }
 
-            // Add bill promotions
-            foreach (var promotion in billRequestDto.Promotions)
+            // nếu có promotion thì nhân với discount rate
+            foreach (var promotion in promotions)
             {
-                var billPromotion = new BillPromotion
+                bill.TotalAmount *= (1 - promotion.DiscountRate / 100);
+            }
+
+            var transaction = Context.Database.BeginTransaction();
+            try
+            {
+                // Build Bill
+                var billId = await Context.Bills.AddAsync(bill);
+                await Context.SaveChangesAsync();
+
+                // Build BillPromotions
+                var billPromotions = new List<BillPromotion>();
+                foreach (var promotion in promotions)
                 {
-                    BillId = billId,
-                    PromotionId = promotion.PromotionId,
-                };
-                await BillPromotionRepository.Create(billPromotion);
-            }
+                    var billPromotion = new BillPromotion
+                    {
+                        BillId = billId.Entity.BillId,
+                        PromotionId = promotion.PromotionId
+                    };
+                    billPromotions.Add(billPromotion);
+                }
+                await Context.BillPromotions.AddRangeAsync(billPromotions);
+                await Context.SaveChangesAsync();
 
-            // Generate response
-            var items = new List<BillItemResponse>();
-            foreach (var i in billRequestDto.Jewelries)
-            {
-                var jewelryPrice = await JewelryRepository.GetById(i.JewelryId);
-                var billItemResponse = new BillItemResponse
+                // Build Warranty
+                var warranties = new List<Warranty>();
+                foreach (var item in jewelries)
                 {
-                    JewelryId = i.JewelryId,
-                    Name = jewelryPrice?.Name,
-                    LaborCost = jewelryPrice.LaborCost,
-                    JewelryPrice = jewelryPrice.JewelryPrice,
-                    TotalPrice = jewelryPrice.TotalPrice,
-                };
-                items.Add(billItemResponse);
-            }
-
-            var promotions = new List<BillPromotionResponse>();
-            foreach (var p in billRequestDto.Promotions)
-            {
-                var promotionDiscountRate = await PromotionRepository.GetById(p.PromotionId);
-                var billPromotionResponse = new BillPromotionResponse
+                    var warrantyMonth = item.WarrantyTime;
+                    var quantity = billRequestDto.Jewelries.First(j => j.JewelryId == item.JewelryId).Quantity;
+                    if (warrantyMonth != null)
+                    {
+                        for (int i = 0; i < quantity; i++)
+                        {
+                            var warranty = new Warranty
+                            {
+                                BillId = billId.Entity.BillId,
+                                CustomerId = billRequestDto.CustomerId,
+                                EndDate = DateTime.Now.AddMonths(warrantyMonth.Value).ToUniversalTime(),
+                                JewelryId = item.JewelryId
+                            };
+                            warranties.Add(warranty);
+                        }
+                    }
+                }
+                if (warranties.Count > 0)
                 {
-                    PromotionId = p.PromotionId,
-                    Discount = (float)promotionDiscountRate.DiscountRate
-                };
-                promotions.Add(billPromotionResponse);
+                    await Context.Warranties.AddRangeAsync(warranties);
+                    await Context.SaveChangesAsync();
+                }
+
+                transaction.Commit();
             }
-
-            foreach (var totalItemPrice in items)
+            catch (System.Exception)
             {
-                totalAmount += totalItemPrice.TotalPrice;
+                transaction.Rollback();
+                throw;
             }
-
-            foreach (var promotion in billRequestDto.Promotions)
+            var a = new BillResponseDto
             {
-                var promotionDiscount = await PromotionRepository.GetById(promotion.PromotionId);
-                totalDiscountRate += (double)promotionDiscount.DiscountRate;
-            }
-
-            bill.TotalAmount = CalculateFinalAmount(totalAmount, totalDiscountRate);
-            await BillRepository.UpdateBill(bill);
-
-            var billResponseDto = new BillResponseDto
-            {
-                BillId = billId,
-                CustomerName = CustomerRepository.GetById(billRequestDto.CustomerId).Result?.FullName,
-                StaffName = UserRepository.GetById(billRequestDto.UserId).Result?.Username,
-                TotalAmount = totalAmount,
-                TotalDiscount = totalDiscountRate,
-                SaleDate = bill.SaleDate,
-                Items = items,
-                Promotions = promotions,
-                AdditionalDiscount = billRequestDto.AdditionalDiscount,
-                PointsUsed = 0, // Calculate points used
-                FinalAmount = CalculateFinalAmount(totalAmount, (float)totalDiscountRate)
+                Items = null,
+                Promotions = null,
             };
-
-            await BillDetailRepository.AddBillDetail(Mapper.Map<BillDetailDto>(billResponseDto));
-            return billResponseDto;
+            return a;
         }
 
 

@@ -14,9 +14,14 @@ namespace DAO
             _context = new JssatsContext();
         }
 
-        public async Task<IEnumerable<Promotion>> GetPromotions()
+        public async Task<IEnumerable<Promotion>> GetPromotions(bool available = false)
         {
-            return await _context.Promotions.ToListAsync();
+            var query = _context.Promotions.AsQueryable();
+            if (available)
+            {
+                query = query.Where(x => x.StartDate <= DateTime.Now && x.EndDate >= DateTime.Now);
+            }
+            return await query.ToListAsync();
         }
         public async Task<Promotion?> GetPromotionById(int id)
         {

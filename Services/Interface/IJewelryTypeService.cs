@@ -1,11 +1,12 @@
-﻿using BusinessObjects.Models;
+﻿using BusinessObjects.DTO.Counter;
+using BusinessObjects.Models;
 
 namespace Services.Interface;
 
-public interface IJewelryTypeService
+public interface ICounterService
 {
-    Task<IEnumerable<JewelryType?>?> GetJewelry();
-    Task<JewelryType?> GetJewelryById(int id);
-    Task<int> CreateJewelry(JewelryType jewelryType);
-    Task<int> UpdateJewelry(int id, JewelryType jewelryType);
+    Task<Counter?> GetById(int id);
+    Task<int> Create(Counter counter);
+    Task<int> Update(int id, Counter counter);
+    Task<IEnumerable<CounterDTO?>?> Gets();
 }
