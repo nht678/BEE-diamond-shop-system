@@ -33,10 +33,5 @@ namespace Repositories.Implementation
         {
             return await PromotionDao.UpdatePromotion(id, promotion);
         }
-
-        public async Task<IEnumerable<Promotion>?> Gets(bool available)
-        {
-            return await PromotionDao.GetPromotions(available);
-        }
     }
 }

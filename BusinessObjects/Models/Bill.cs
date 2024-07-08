@@ -37,7 +37,6 @@ public partial class Bill
 
     public virtual ICollection<BillJewelry> BillJewelries { get; set; } = new List<BillJewelry>();
     public virtual ICollection<BillPromotion> BillPromotions { get; set; } = new List<BillPromotion>();
-    public virtual ICollection<Warranty> Warranties { get; set; } = new List<Warranty>();
     public virtual Customer? Customer { get; set; }
     public virtual User? User { get; set; }
     public virtual Counter? Counter { get; set; }

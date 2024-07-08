@@ -13,7 +13,6 @@ public partial class Jewelry
     public double? LaborCost { get; set; }
     public bool? IsSold { get; set; }
     public string? PreviewImage { get; set; }
-    public int? WarrantyTime { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 

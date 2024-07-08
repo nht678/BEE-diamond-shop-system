@@ -17,9 +17,9 @@ namespace Services.Implementation
             return user ?? null;
         }
 
-        public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId)
+        public async Task<IEnumerable<User?>?> GetUsers()
         {
-            return Mapper.Map<IEnumerable<UserDto?>?>(await UserRepository.Gets(roleId));
+            return await UserRepository.Gets();
         }
 
         public async Task<bool> IsUser(LoginDto loginDto)

@@ -1,8 +1,6 @@
 ﻿using BusinessObjects.DTO.Jewelry;
 using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
-using BusinessObjects.Utils;
-using Domain.Constants;
 using Repositories.Interface;
 using Services.Interface;
 using Tools;
@@ -34,27 +32,19 @@ namespace Services.Implementation
             // Create Jewelry first before creating JewelryMaterial
             var jewelry = new Jewelry
             {
-                Code = jewelryRequestDto.Code,
                 Name = jewelryRequestDto.Name,
-                JewelryTypeId = jewelryRequestDto.JewelryTypeId,
                 Barcode = jewelryRequestDto.Barcode,
                 LaborCost = jewelryRequestDto.LaborCost,
-                PreviewImage = jewelryRequestDto.PreviewImage,
-                WarrantyTime = jewelryRequestDto.WarrantyTime,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now,
                 IsSold = false
             };
             try
             {
                 await JewelryRepository.Create(jewelry);
-                FileUtil.SaveTempToReal(jewelry.PreviewImage, EnumFileType.Jewellery);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 throw new CustomException.InvalidDataException("Failed to create Jewelry.");
             }
-
             // Create JewelryMaterial
             var jewelryMaterial = new JewelryMaterial
             {
@@ -76,9 +66,9 @@ namespace Services.Implementation
             }
         }
 
-        public async Task<int> DeleteJewelry(int id)
+        public Task<int> DeleteJewelry(int id)
         {
-            return await JewelryRepository.Delete(id);
+            throw new NotImplementedException();
         }
 
         public async Task<int> UpdateJewelry(int id, Jewelry jewelry)

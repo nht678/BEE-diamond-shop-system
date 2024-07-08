@@ -23,9 +23,9 @@ namespace Management.Implementation
             return token;
         }
 
-        public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId)
+        public async Task<IEnumerable<User?>?> GetUsers()
         {
-            return await UserService.GetUsers(roleId);
+            return await UserService.GetUsers();
         }
 
         public async Task<IEnumerable<BillDetailDto?>?> GetBills()

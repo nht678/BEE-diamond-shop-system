@@ -11,9 +11,9 @@ public class UserController(IUserManagement userManagement) : ControllerBase
 {
     private IUserManagement UserManagement { get; } = userManagement;
     [HttpGet("GetUsers")]
-    public async Task<IActionResult> Get(int? roleId)
+    public async Task<IActionResult> Get()
     {
-        var users = await UserManagement.GetUsers(roleId);
+        var users = await UserManagement.GetUsers();
         return Ok(users);
     }
     [HttpGet("GetUserById/{id}")]

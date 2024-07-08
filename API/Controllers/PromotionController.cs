@@ -10,9 +10,9 @@ namespace API.Controllers
     {
         private IPromotionService PromotionService { get; } = promotionService;
         [HttpGet("GetPromotions")]
-        public async Task<IActionResult> GetAllPromotion(bool available = false)
+        public async Task<IActionResult> GetAllPromotion()
         {
-            var result = await PromotionService.GetPromotions(available);
+            var result = await PromotionService.GetPromotions();
             return Ok(result);
         }
         [HttpGet("GetPromotionById/{id}")]
@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok(result);
         }
 
-        [HttpPut("UpdatePromotion/{id}")]
+        [HttpPut("UpdatePromotion")]
         public async Task<IActionResult> UpdatePromotion(int id, PromotionDto promotionDto)
         {
             var result = await PromotionService.UpdatePromotion(id, promotionDto);

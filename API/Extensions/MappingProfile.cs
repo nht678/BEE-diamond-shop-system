@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using BusinessObjects.DTO;
 using BusinessObjects.DTO.BillReqRes;
-using BusinessObjects.DTO.Counter;
 using BusinessObjects.DTO.Jewelry;
 using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
@@ -19,10 +18,7 @@ namespace API.Extensions
             CreateMap<JewelryType, JewelryTypeDto>().ReverseMap();
             CreateMap<Promotion, PromotionDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
-            CreateMap<User, UserCounter>().ReverseMap();
-            CreateMap<User, UserDto>().
-                ForMember(dest => dest.CounterName, opt => opt.MapFrom(src => src.Counter.Name));
-
+            CreateMap<Role, RoleDto>().ReverseMap();
             CreateMap<Customer, CustomerDto>().ReverseMap();
             // ResponseDto Mapping
             CreateMap<Gold, GoldPriceResponseDto>().ReverseMap();
@@ -30,8 +26,6 @@ namespace API.Extensions
             CreateMap<Customer, CustomerResponseDto>();
             // MongoDB Mapping
             CreateMap<BillResponseDto, BillDetailDto>().ReverseMap();
-            CreateMap<CounterDTO, Counter>().ReverseMap()
-                .ForMember(dest => dest.NumOfStaff, opt => opt.MapFrom(src => src.Users.Count));
         }
     }
 }

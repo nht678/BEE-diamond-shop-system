@@ -31,7 +31,7 @@ namespace Repositories.Implementation
 
         public async Task<IEnumerable<JewelryResponseDto>?> Gets()
         {
-            var jewelries = await JewelryDao.GetJewelriesDetails();
+            var jewelries = await JewelryDao.GetJewelries();
             if (jewelries == null || !jewelries.Any())
             {
                 return null;
@@ -41,34 +41,43 @@ namespace Repositories.Implementation
 
             foreach (var jewelry in jewelries)
             {
+                var jewelryType = await JewelryTypeDao.GetJewelryTypeById(jewelry.JewelryTypeId);
+                var jewelryMaterials = await JewelryMaterialDao.GetJewelryMaterialByJewelry(jewelry.JewelryId);
+                var jewelryMaterialList = new List<JewelryMaterial> { jewelryMaterials };
+                foreach (var jewelryMaterial in jewelryMaterialList)
+                {
+                    var goldType = await GoldPriceDao.GetGoldPriceById(jewelryMaterial.GoldId);
+                    var stoneType = await GemPriceDao.GetStonePriceById(jewelryMaterial.GemId);
+
+                    jewelryMaterial.Gold = goldType;
+                    jewelryMaterial.Gem = stoneType;
+                }
+
+                jewelry.JewelryType = jewelryType;
+                jewelry.JewelryMaterials = jewelryMaterialList;
+
                 var totalPrice = jewelry.JewelryMaterials.Sum(jm => CalculateTotalPrice(jm, jewelry.LaborCost));
+
                 var jewelryResponseDto = new JewelryResponseDto
                 {
                     JewelryId = jewelry.JewelryId,
-                    Code = jewelry.Code,
                     Name = jewelry.Name,
-                    Type = jewelry.JewelryType?.Name,
-                    JewelryTypeId = jewelry.JewelryType?.JewelryTypeId,
+                    Type = jewelryType.Name,
                     Barcode = jewelry.Barcode,
                     LaborCost = jewelry.LaborCost,
-                    PreviewImage = jewelry.PreviewImage,
-                    JewelryPrice = CalculateJewelryPrice(jewelry.JewelryMaterials.FirstOrDefault()),
-                    WarrantyTime = jewelry.WarrantyTime,
                     Materials = jewelry.JewelryMaterials.Select(jm => new Materials
                     {
                         Gold = new GoldResponseDto
                         {
-                            GoldId = jm.GoldId,
                             GoldType = jm.Gold?.Type,
-                            GoldPrice = jm.Gold?.SellPrice ?? 0,
-                            GoldWeight = jm.GoldWeight
+                            GoldQuantity = jm.GoldWeight,
+                            GoldPrice = jm.Gold?.SellPrice ?? 0
                         },
                         Gem = new GemResponseDto
                         {
-                            GemId = jm.GemId,
-                            GemType = jm.Gem?.Type,
+                            Gem = jm.Gem?.Type,
                             GemQuantity = jm.StoneQuantity,
-                            GemPrice = jm.Gem?.SellPrice ?? 0,
+                            GemPrice = jm.Gem?.SellPrice ?? 0
                         }
                     }).ToList(),
                     TotalPrice = totalPrice
@@ -103,18 +112,17 @@ namespace Repositories.Implementation
                 Barcode = jewelry.Barcode,
                 JewelryPrice = CalculateJewelryPrice(jewelryMaterial),
                 LaborCost = jewelry.LaborCost,
-                WarrantyTime = jewelry.WarrantyTime,
                 Materials = jewelry.JewelryMaterials.Select(jm => new Materials
                 {
                     Gold = new GoldResponseDto
                     {
                         GoldType = jm.Gold?.Type,
-                        GoldWeight = jm.GoldWeight,
+                        GoldQuantity = jm.GoldWeight,
                         GoldPrice = jm.Gold?.SellPrice ?? 0
                     },
                     Gem = new GemResponseDto
                     {
-                        GemType = jm.Gem?.Type,
+                        Gem = jm.Gem?.Type,
                         GemQuantity = jm.StoneQuantity,
                         GemPrice = jm.Gem?.SellPrice ?? 0
                     }
@@ -143,15 +151,13 @@ namespace Repositories.Implementation
                 totalPrice += jewelryMaterial.Gem.BuyPrice * jewelryMaterial.StoneQuantity;
             }
 
-            totalPrice += (float)(laborCost ?? 0);
+            totalPrice += (float)laborCost;
             return totalPrice;
         }
 
-        private static float CalculateJewelryPrice(JewelryMaterial? jewelryMaterial)
+        private static float CalculateJewelryPrice(JewelryMaterial jewelryMaterial)
         {
             float totalPrice = 0;
-            if (jewelryMaterial == null) return totalPrice;
-
             if (jewelryMaterial.Gold != null)
             {
                 totalPrice += jewelryMaterial.Gold.BuyPrice * jewelryMaterial.GoldWeight;
