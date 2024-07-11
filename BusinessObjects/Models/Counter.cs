@@ -9,7 +9,7 @@ public partial class Counter
     /// <summary>
     /// Quầy ở vị trí số mấy
     /// </summary>
-    public int Number { get; set; }
+    public string? Name { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

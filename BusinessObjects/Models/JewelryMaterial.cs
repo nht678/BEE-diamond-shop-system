@@ -24,12 +24,12 @@ public class JewelryMaterial
     /// <summary>
     /// Trọng lượng vàng
     /// </summary>
-    public float GoldWeight { get; set; }
+    public decimal GoldWeight { get; set; }
 
     /// <summary>
     /// Số lượng đá
     /// </summary>
-    public float StoneQuantity { get; set; }
+    public decimal StoneQuantity { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }

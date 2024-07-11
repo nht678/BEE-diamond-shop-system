@@ -1,5 +1,7 @@
 ﻿using BusinessObjects.Context;
+using BusinessObjects.DTO;
 using BusinessObjects.Models;
+using Domain.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace DAO
@@ -16,20 +18,55 @@ namespace DAO
         {
             return await _context.Users.FirstOrDefaultAsync(p => p.Email == email && p.Password == password);
         }
-        public async Task<IEnumerable<User?>?> GetUsers()
+
+        /// <summary>
+        /// Lấy ra nhân viên không có counter
+        /// </summary>
+        /// <returns></returns>
+        public async Task<IEnumerable<User?>?> GetStaffHasNoCounter()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Where(x => x.RoleId == (int)AppRole.Staff && x.CounterId == null).ToListAsync();
         }
-        public async Task<int> AddUser(User user)
+
+        /// <summary>
+        /// Lấy ra nhân viên theo counter
+        /// </summary>
+        /// <param name="counterId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<User?>?> GetStaffCounter(int counterId)
+        {
+            return await _context.Users.Where(x => x.RoleId == (int)AppRole.Staff && x.CounterId == counterId).ToListAsync();
+        }
+        public async Task<IEnumerable<User?>?> GetUsers(int? roleId, int? counterId, bool? hasCounter)
+        {
+            var userQuery = _context.Users.Include(x => x.Counter).AsQueryable();
+            if (roleId != null)
+            {
+                userQuery = userQuery.Where(x => x.RoleId == roleId);
+            }
+
+            if (counterId != null)
+            {
+                userQuery = userQuery.Where(x => x.CounterId == counterId);
+            }
+
+            if (hasCounter != null)
+            {
+                userQuery = userQuery.Where(x => hasCounter == true ? x.CounterId != null : x.CounterId == null);
+            }
+
+            return await userQuery.ToListAsync();
+        }
+        public async Task<ServiceResponse> AddUser(User user)
         {
             _context.Users.Add(user);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return new ServiceResponse { Message = "User created successfully" };
         }
         public async Task<int> CreateUser(User user)
         {
             await _context.Users.AddAsync(user);
             return await _context.SaveChangesAsync();
-            //test
         }
         public async Task<int> UpdateUser(int id, User user)
         {
@@ -37,6 +74,7 @@ namespace DAO
             if (existUser == null) return 0;
             user.UserId = id;
             _context.Entry(existUser).CurrentValues.SetValues(user);
+            _context.Entry(existUser).Property(x => x.Password).IsModified = false;
             _context.Entry(existUser).State = EntityState.Modified;
             return await _context.SaveChangesAsync();
         }

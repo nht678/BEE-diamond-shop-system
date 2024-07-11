@@ -24,9 +24,9 @@ namespace Repositories.Implementation
 
         public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
         {
-            double totalAmount = 999;
-            double totalDiscount = 0;
-            double finalAmount = 0;
+            decimal totalAmount = 999;
+            decimal totalDiscount = 0;
+            decimal finalAmount = 0;
 
             // Create bill
             var bill = new Bill
@@ -78,8 +78,7 @@ namespace Repositories.Implementation
                     PromotionId = p.PromotionId,
                     Discount = 0 // Calculate discount
                 }).ToList(),
-                AdditionalDiscount = billRequestDto.AdditionalDiscount,
-                PointsUsed = 0, // Calculate points used
+                 PointsUsed = 0, // Calculate points used
                 FinalAmount = 0 // Calculate final amount
             };
             return billResponseDto;

@@ -65,8 +65,8 @@ namespace BusinessObjects.Utils
             Image initImage = Image.FromFile(origFileLocation);
             int templateWidth = newWidth;
             int templateHeight = newHeight;
-            double templateRate = double.Parse(templateWidth.ToString()) / templateHeight;
-            double initRate = double.Parse(initImage.Width.ToString()) / initImage.Height;
+            decimal templateRate = decimal.Parse(templateWidth.ToString()) / templateHeight;
+            decimal initRate = decimal.Parse(initImage.Width.ToString()) / initImage.Height;
             if (templateRate == initRate)
             {
 

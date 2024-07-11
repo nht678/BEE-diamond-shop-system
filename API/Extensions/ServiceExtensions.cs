@@ -1,7 +1,7 @@
-﻿using DAO;
+﻿using BusinessObjects.Context;
+using DAO;
 using Management.Implementation;
 using Management.Interface;
-using MongoDB.Driver;
 using Repositories.Implementation;
 using Repositories.Interface;
 using Services.Implementation;
@@ -15,6 +15,7 @@ public static class ServiceExtensions
     {
         //Management
         serviceCollection.AddScoped<IUserManagement, UserManagement>();
+        serviceCollection.AddScoped<JssatsContext>();
         //Repositories
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
         serviceCollection.AddScoped<IJewelryRepository, JewelryRepository>();
@@ -23,17 +24,17 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<IPromotionRepository, PromotionRepository>();
         serviceCollection.AddScoped<IBillRepository, BillRepository>();
         serviceCollection.AddScoped<IJewelryTypeRepository, JewelryTypeRepository>();
-        serviceCollection.AddScoped<IRoleRepository, RoleRepository>();
         serviceCollection.AddScoped<IGoldPriceRepository, GoldPriceRepository>();
         serviceCollection.AddScoped<IGemPriceRepository, GemPriceRepository>();
         serviceCollection.AddScoped<IBillPromotionRepository, BillPromotionRepository>();
         serviceCollection.AddScoped<IBillJewelryRepository, BillJewelryRepository>();
         serviceCollection.AddScoped<IBillDetailRepository, BillDetailRepository>();
         serviceCollection.AddScoped<IJewelryMaterialRepository, JewelryMaterialRepository>();
+        serviceCollection.AddScoped<ICounterRepository, CounterRepository>();
+        serviceCollection.AddHttpContextAccessor();
         //Services
         serviceCollection.AddScoped<IGemPriceService, GemPriceService>();
         serviceCollection.AddScoped<IGoldPriceService, GoldPriceService>();
-        serviceCollection.AddScoped<IRoleService, RoleService>();
         serviceCollection.AddScoped<IUserService, UserService>();
         serviceCollection.AddScoped<IJewelryService, JewelryService>();
         serviceCollection.AddScoped<IWarrantyService, WarrantyService>();
@@ -42,6 +43,8 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<IPromotionService, PromotionService>();
         serviceCollection.AddScoped<IJewelryTypeService, JewelryTypeService>();
         serviceCollection.AddScoped<ITokenService, TokenService>();
+        serviceCollection.AddScoped<ICounterService, CounterService>();
+        serviceCollection.AddScoped<IVnPayService, VnPayService>();
         //DAO
         serviceCollection.AddScoped<BillDao>();
         serviceCollection.AddScoped<BillJewelryDao>();
@@ -51,19 +54,12 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<JewelryDao>();
         serviceCollection.AddScoped<JewelryTypeDao>();
         serviceCollection.AddScoped<PromotionDao>();
-        serviceCollection.AddScoped<PurchaseDao>();
-        serviceCollection.AddScoped<RoleDao>();
         serviceCollection.AddScoped<GemPriceDao>();
         serviceCollection.AddScoped<UserDao>();
         serviceCollection.AddScoped<WarrantyDao>();
         serviceCollection.AddScoped<JewelryMaterialDao>();
-        //Other
-        serviceCollection.AddSingleton<IMongoClient, MongoClient>(s =>
-        {
-            var uri = s.GetRequiredService<IConfiguration>()["MongoDb:CloudConnectionString"];
-            return new MongoClient(uri);
-        });
-
+        serviceCollection.AddScoped<CounterDAO>();
+        
         return serviceCollection;
     }
 }
