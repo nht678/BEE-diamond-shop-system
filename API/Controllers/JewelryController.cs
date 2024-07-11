@@ -37,6 +37,17 @@ public class JewelryController(IJewelryService jewelryService, IMapper mapper) :
     public async Task<IActionResult> UpdateJewelry(int id, JewelryRequestDto jewelryRequestDto)
     {
         var jewelry = Mapper.Map<Jewelry>(jewelryRequestDto);
+        var material = jewelryRequestDto.JewelryMaterial;
+        var jwMaterial = new JewelryMaterial()
+        {
+            JewelryMaterialId = material.JewelryMaterialId,
+            JewelryId = jewelry.JewelryId,
+            GoldWeight = material.GoldWeight,
+            StoneQuantity = material.GemQuantity,
+            GoldId = material.GoldId,
+            GemId = material.GemId,
+        };
+        jewelry.JewelryMaterials = new List<JewelryMaterial> { jwMaterial };
         var result = await JewelryService.UpdateJewelry(id, jewelry);
         return Ok(result);
     }

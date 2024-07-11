@@ -23,14 +23,14 @@ namespace Management.Implementation
             return token;
         }
 
-        public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId)
+        public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId, int? counterId, bool? hasCounter)
         {
-            return await UserService.GetUsers(roleId);
+            return await UserService.GetUsers(roleId, counterId, hasCounter);
         }
 
-        public async Task<IEnumerable<BillDetailDto?>?> GetBills()
+        public async Task<IEnumerable<BillDetailDto?>?> GetBills(int type)
         {
-            return await BillService.GetBills();
+            return await BillService.GetBills(type);
         }
 
         public async Task<BillDetailDto?> GetBillById(int id)
@@ -38,7 +38,7 @@ namespace Management.Implementation
             return await BillService.GetById(id);
         }
 
-        public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
+        public async Task<ServiceResponse> CreateBill(BillRequestDto billRequestDto)
         {
             return await BillService.Create(billRequestDto);
         }
@@ -48,7 +48,7 @@ namespace Management.Implementation
             return await UserService.GetUserById(id);
         }
 
-        public async Task<int> AddUser(UserDto userDto)
+        public async Task<ServiceResponse> AddUser(UserDto userDto)
         {
             return await UserService.AddUser(userDto);
         }
@@ -61,6 +61,11 @@ namespace Management.Implementation
         public async Task<int> DeleteUser(int id)
         {
             return await UserService.DeleteUser(id);
+        }
+
+        public async Task<ServiceResponse> PayNow(int billId)
+        {
+            return await BillService.PayNow(billId);
         }
     }
 }

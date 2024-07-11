@@ -61,7 +61,7 @@ namespace Services.Implementation
                 JewelryId = jewelry.JewelryId,
                 GoldId = jewelryRequestDto.JewelryMaterial.GoldId,
                 GemId = jewelryRequestDto.JewelryMaterial.GemId,
-                GoldWeight = jewelryRequestDto.JewelryMaterial.GoldQuantity,
+                GoldWeight = jewelryRequestDto.JewelryMaterial.GoldWeight,
                 StoneQuantity = jewelryRequestDto.JewelryMaterial.GemQuantity
             };
             try

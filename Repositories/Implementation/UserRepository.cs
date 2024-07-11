@@ -32,7 +32,7 @@ namespace Repositories.Implementation
 
         public async Task<IEnumerable<User?>?> Gets()
         {
-            var users = await UserDao.GetUsers(null);
+            var users = await UserDao.GetUsers(null, null, null);
             return users;
         }
 
@@ -45,9 +45,9 @@ namespace Repositories.Implementation
             return await UserDao.DeleteUser(id);
         }
 
-        public Task<IEnumerable<User>?> Gets(int? roleId)
+        public Task<IEnumerable<User>?> Gets(int? roleId, int? counterId, bool? hasCounter)
         {
-            return UserDao.GetUsers(roleId);
+            return UserDao.GetUsers(roleId, counterId, hasCounter);
         }
     }
 }

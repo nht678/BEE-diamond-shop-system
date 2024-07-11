@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Context;
+using BusinessObjects.DTO;
 using BusinessObjects.Models;
 using Domain.Constants;
 using Microsoft.EntityFrameworkCore;
@@ -36,21 +37,31 @@ namespace DAO
         {
             return await _context.Users.Where(x => x.RoleId == (int)AppRole.Staff && x.CounterId == counterId).ToListAsync();
         }
-        public async Task<IEnumerable<User?>?> GetUsers(int? roleId)
+        public async Task<IEnumerable<User?>?> GetUsers(int? roleId, int? counterId, bool? hasCounter)
         {
+            var userQuery = _context.Users.Include(x => x.Counter).AsQueryable();
             if (roleId != null)
             {
-                return await _context.Users.Include(x => x.Counter).Where(x => x.RoleId == roleId).ToListAsync();
+                userQuery = userQuery.Where(x => x.RoleId == roleId);
             }
-            else
+
+            if (counterId != null)
             {
-                return await _context.Users.Include(x => x.Counter).ToListAsync();
+                userQuery = userQuery.Where(x => x.CounterId == counterId);
             }
+
+            if (hasCounter != null)
+            {
+                userQuery = userQuery.Where(x => hasCounter == true ? x.CounterId != null : x.CounterId == null);
+            }
+
+            return await userQuery.ToListAsync();
         }
-        public async Task<int> AddUser(User user)
+        public async Task<ServiceResponse> AddUser(User user)
         {
             _context.Users.Add(user);
-            return await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+            return new ServiceResponse { Message = "User created successfully" };
         }
         public async Task<int> CreateUser(User user)
         {
@@ -63,6 +74,7 @@ namespace DAO
             if (existUser == null) return 0;
             user.UserId = id;
             _context.Entry(existUser).CurrentValues.SetValues(user);
+            _context.Entry(existUser).Property(x => x.Password).IsModified = false;
             _context.Entry(existUser).State = EntityState.Modified;
             return await _context.SaveChangesAsync();
         }

@@ -19,7 +19,7 @@ namespace BusinessObjects.Context
             {
                 //optionsBuilder.UseSqlServer(GetConnectionString());
                 //optionsBuilder.UseNpgsql(GetConnectionString());
-                optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345678;Database=JSSATS;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Server=THANHNHAT\\SQLEXPRESS;Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
                 //optionsBuilder.UseNpgsql("Host=aws-0-ap-southeast-1.pooler.supabase.com; Database=postgres; Code=postgres.gfjsnspjzlcfdrzxxksm; Password=Akaka0406+++");
 
             }
@@ -51,12 +51,12 @@ namespace BusinessObjects.Context
         public DbSet<Jewelry> Jewelries { get; set; }
         public DbSet<JewelryType> JewelryTypes { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
-        public DbSet<Purchase> Purchases { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Warranty> Warranties { get; set; }
         public DbSet<JewelryMaterial> JewelryMaterials { get; set; }
         public DbSet<Gold> Golds { get; set; }
         public DbSet<Gem> Gems { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -91,9 +91,6 @@ namespace BusinessObjects.Context
             modelBuilder.Entity<Promotion>()
                 .HasKey(p => p.PromotionId);
 
-            modelBuilder.Entity<Purchase>()
-                .HasKey(p => p.PurchaseId);
-
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
 
@@ -102,9 +99,11 @@ namespace BusinessObjects.Context
 
             modelBuilder.Entity<Gem>()
                 .HasKey(sp => sp.GemId);
+            
+            modelBuilder.Entity<Transaction>()
+                .HasKey(t => t.TransactionId);
 
             // Relationships
-
             modelBuilder.Entity<JewelryMaterial>()
                 .HasOne(jm => jm.Jewelry)
                 .WithMany(j => j.JewelryMaterials)
@@ -113,7 +112,8 @@ namespace BusinessObjects.Context
 
             modelBuilder.Entity<Warranty>()
                 .HasOne(w => w.Jewelry)
-                .WithOne(j => j.Warranty)
+                .WithMany(j => j.Warranties)
+                .HasForeignKey(w => w.JewelryId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Bill>()
@@ -164,30 +164,17 @@ namespace BusinessObjects.Context
                 .HasForeignKey(j => j.JewelryTypeId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Purchase>()
-                .HasOne(p => p.Customer)
-                .WithMany(cu => cu.Purchases)
-                .HasForeignKey(p => p.CustomerId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Purchase>()
-                .HasOne(p => p.Jewelry)
-                .WithMany(j => j.Purchases)
-                .HasForeignKey(p => p.JewelryId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            modelBuilder.Entity<Purchase>()
-                .HasOne(p => p.User)
-                .WithMany(u => u.Purchases)
-                .HasForeignKey(p => p.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
-
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Counter)
                 .WithMany(c => c.Users)
                 .HasForeignKey(u => u.CounterId)
                 .OnDelete(DeleteBehavior.NoAction);
-
+            
+            modelBuilder.Entity<Transaction>()
+                .HasOne(t => t.Bill)
+                .WithMany(b => b.Transactions)
+                .HasForeignKey(t => t.BillId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             // Seed data
 
@@ -381,29 +368,6 @@ namespace BusinessObjects.Context
                     LastUpdated = DateTime.Now,
                     City = "Ha Noi",
                     Type = "18k"
-                }
-            );
-
-            modelBuilder.Entity<Purchase>().HasData(
-                new Purchase
-                {
-                    PurchaseId = 1,
-                    CustomerId = 1,
-                    JewelryId = 1,
-                    UserId = 1,
-                    IsBuyBack = 0,
-                    PurchasePrice = 500,
-                    PurchaseDate = DateTime.Now
-                },
-                new Purchase
-                {
-                    PurchaseId = 2,
-                    CustomerId = 2,
-                    JewelryId = 2,
-                    UserId = 1,
-                    IsBuyBack = 1,
-                    PurchasePrice = 300,
-                    PurchaseDate = DateTime.Now
                 }
             );
         }

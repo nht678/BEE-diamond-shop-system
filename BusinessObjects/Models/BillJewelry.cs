@@ -1,4 +1,6 @@
-﻿namespace BusinessObjects.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BusinessObjects.Models;
 
 /// <summary>
 /// Chi tiết mặt hàng trang sức trong phiếu mua hàng
@@ -12,10 +14,16 @@ public partial class BillJewelry
     /// </summary>
     public int BillId { get; set; }
 
+
     /// <summary>
     /// Trang sức
     /// </summary>
     public int JewelryId { get; set; }
+
+    /// <summary>
+    /// Order
+    /// </summary>
+    public int SortOrder { get; set; }
 
     /// <summary>
     /// Số lượng
@@ -25,41 +33,55 @@ public partial class BillJewelry
     /// <summary>
     /// Tiền công
     /// </summary>
-    public double? LaborCost { get; set; }
+    public decimal? LaborCost { get; set; }
 
     /// <summary>
     /// Tiền đá tại thời điểm bán
     /// </summary>
-    public float GemSellPrice { get; set; }
+    public decimal GemSellPrice { get; set; }
 
     /// <summary>
-    /// Tiền vàng tại thời điểm bán
+    /// Loại đá
     /// </summary>
-    public float GoldSellPrice { get; set; }
-
-    /// <summary>
-    /// Trọng lượng vàng
-    /// </summary>
-    public float GoldWeight { get; set; }
+    public string? GemType { get; set; }
 
     /// <summary>
     /// Số lượng đá
     /// </summary>
-    public float StoneQuantity { get; set; }
+    public decimal StoneQuantity { get; set; }
+
+    /// <summary>
+    /// Tiền vàng tại thời điểm bán
+    /// </summary>
+    public decimal GoldSellPrice { get; set; }
+
+    /// <summary>
+    /// Trọng lượng vàng
+    /// </summary>
+    public decimal GoldWeight { get; set; }
+
+    /// <summary>
+    /// Loại vàng
+    /// </summary>
+    public string? GoldType { get; set; }
+
 
     /// <summary>
     /// Đơn giá
     /// </summary>
-    public double? Price { get; set; }
+    public decimal? Price { get; set; }
 
     /// <summary>
     /// Thành tiền [giá vàng thời điểm * trọng lượng sản phẩm] + tiền công + tiền đá 
     /// </summary>
-    public double? TotalAmount { get; set; }
+    public decimal? TotalAmount { get; set; }
 
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
     public virtual Bill? Bill { get; set; }
     public virtual Jewelry? Jewelry { get; set; }
+
+    [NotMapped]
+    public DateTimeOffset? Warranty { get; set; }
 }

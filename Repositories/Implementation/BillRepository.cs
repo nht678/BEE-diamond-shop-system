@@ -24,9 +24,9 @@ namespace Repositories.Implementation
 
         public async Task<BillResponseDto> CreateBill(BillRequestDto billRequestDto)
         {
-            double totalAmount = 999;
-            double totalDiscount = 0;
-            double finalAmount = 0;
+            decimal totalAmount = 999;
+            decimal totalDiscount = 0;
+            decimal finalAmount = 0;
 
             // Create bill
             var bill = new Bill

@@ -21,5 +21,4 @@ public partial class User
     public DateTimeOffset? UpdatedAt { get; set; }
     public virtual ICollection<Bill> Bills { get; set; } = [];
     public virtual Counter? Counter { get; set; }
-    public virtual ICollection<Purchase> Purchases { get; set; } = [];
 }

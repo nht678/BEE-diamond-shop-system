@@ -18,21 +18,25 @@ namespace DAO
         }
         public async Task<IEnumerable<Counter>?> Gets()
         {
-            return await _context.Counters.Include(x => x.Users).ToListAsync();
+            return await _context.Counters.Include(x => x.Users).OrderByDescending(x => x.UpdatedAt).ToListAsync();
         }
-
-        public async Task<int> Create(Counter jewelryType)
+        public async Task<int> Create(Counter counter)
         {
-            _context.Counters.Add(jewelryType);
+            var couterExisted = await _context.Counters.FirstOrDefaultAsync(x => x.Name.ToLower().Trim() == counter.Name.ToLower().Trim());
+            if (couterExisted != null) return 0;
+            counter.CreatedAt = DateTime.Now;
+            counter.UpdatedAt = DateTime.Now;
+            _context.Counters.Add(counter);
             return await _context.SaveChangesAsync();
         }
-        public async Task<int> Update(int id, Counter jewelryType)
+        public async Task<int> Update(int id, Counter counter)
         {
             var existingCounter = await _context.Counters
                 .FirstOrDefaultAsync(w => w.CounterId == id);
-            jewelryType.CounterId = id;
+            counter.CounterId = id;
+            counter.UpdatedAt = DateTime.Now;
             if (existingCounter == null) return 0;
-            _context.Entry(existingCounter).CurrentValues.SetValues(jewelryType);
+            _context.Entry(existingCounter).CurrentValues.SetValues(counter);
             _context.Entry(existingCounter).State = EntityState.Modified;
 
             return await _context.SaveChangesAsync();

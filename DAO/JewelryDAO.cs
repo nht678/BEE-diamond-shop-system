@@ -53,6 +53,10 @@ namespace DAO
 
             jewelry.JewelryId = id;
             if (existingJewelry == null) return 0;
+            foreach (var material in jewelry.JewelryMaterials)
+            {
+                material.JewelryId = id;
+            }
 
             // kiểm tra xem jewelry.Code đã tồn tại chưa
             var existingJewelryWithCode = await _context.Jewelries
@@ -61,6 +65,7 @@ namespace DAO
             if (existingJewelryWithCode != null) return 0;
             bool hasChangeImage = existingJewelry.PreviewImage != jewelry.PreviewImage;
             _context.Entry(existingJewelry).CurrentValues.SetValues(jewelry);
+            existingJewelry.JewelryMaterials = jewelry.JewelryMaterials;
             _context.Entry(existingJewelry).State = EntityState.Modified;
             int result = await _context.SaveChangesAsync();
             if (result > 0)

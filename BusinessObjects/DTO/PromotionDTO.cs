@@ -7,7 +7,7 @@ public class PromotionDto
 
     public string? Description { get; set; }
 
-    public double? DiscountRate { get; set; }
+    public decimal? DiscountRate { get; set; }
 
     public DateTime? StartDate { get; set; }
 

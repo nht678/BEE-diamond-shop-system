@@ -10,7 +10,7 @@ public partial class Jewelry
     public string? Code { get; set; }
     public string? Name { get; set; }
     public string? Barcode { get; set; }
-    public double? LaborCost { get; set; }
+    public decimal? LaborCost { get; set; }
     public bool? IsSold { get; set; }
     public string? PreviewImage { get; set; }
     public int? WarrantyTime { get; set; }
@@ -19,7 +19,6 @@ public partial class Jewelry
 
     public virtual ICollection<BillJewelry> BillJewelries { get; set; } = [];
     public virtual JewelryType? JewelryType { get; set; }
-    public virtual Warranty? Warranty { get; set; }
+    public virtual ICollection<Warranty> Warranties { get; set; } = [];
     public virtual IList<JewelryMaterial> JewelryMaterials { get; set; } = [];
-    public virtual ICollection<Purchase> Purchases { get; set; } = [];
 }

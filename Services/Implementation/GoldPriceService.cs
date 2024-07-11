@@ -60,8 +60,8 @@ public class GoldPriceService(IGoldPriceRepository goldPriceRepository, IMapper 
                     if (goldPriceDict != null && goldPriceDict.TryGetValue(key, out var existingGoldPrice))
                     {
                         // Update existing gold price
-                        existingGoldPrice.BuyPrice = float.Parse(buyPrice);
-                        existingGoldPrice.SellPrice = float.Parse(sellPrice);
+                        existingGoldPrice.BuyPrice = decimal.Parse(buyPrice);
+                        existingGoldPrice.SellPrice = decimal.Parse(sellPrice);
                         existingGoldPrice.LastUpdated = ParseAndUpdateTime(updateTime) ?? DateTime.UtcNow;
                         existingGoldPrice.LastFetchTime = DateTime.UtcNow;
                         updatedGoldPrices.Add(existingGoldPrice);
@@ -71,8 +71,8 @@ public class GoldPriceService(IGoldPriceRepository goldPriceRepository, IMapper 
                         var newGoldPrice = new Gold
                         {
                             City = city,
-                            BuyPrice = float.Parse(buyPrice),
-                            SellPrice = float.Parse(sellPrice),
+                            BuyPrice = decimal.Parse(buyPrice),
+                            SellPrice = decimal.Parse(sellPrice),
                             Type = type,
                             LastUpdated = ParseAndUpdateTime(updateTime) ?? DateTime.UtcNow,
                             LastFetchTime = DateTime.UtcNow

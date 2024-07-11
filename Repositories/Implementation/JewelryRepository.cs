@@ -69,7 +69,8 @@ namespace Repositories.Implementation
                             GemType = jm.Gem?.Type,
                             GemQuantity = jm.StoneQuantity,
                             GemPrice = jm.Gem?.SellPrice ?? 0,
-                        }
+                        },
+                        JewelryMaterialId = jm.JewelryMaterialId
                     }).ToList(),
                     TotalPrice = totalPrice
                 };
@@ -117,7 +118,8 @@ namespace Repositories.Implementation
                         GemType = jm.Gem?.Type,
                         GemQuantity = jm.StoneQuantity,
                         GemPrice = jm.Gem?.SellPrice ?? 0
-                    }
+                    },
+                    JewelryMaterialId = jm.JewelryMaterialId
                 }).ToList(),
                 TotalPrice = totalPrice
             };
@@ -130,9 +132,9 @@ namespace Repositories.Implementation
             return await JewelryDao.UpdateJewelry(id, entity);
         }
 
-        private static float CalculateTotalPrice(JewelryMaterial jewelryMaterial, double? laborCost)
+        private static decimal CalculateTotalPrice(JewelryMaterial jewelryMaterial, decimal? laborCost)
         {
-            float totalPrice = 0;
+            decimal totalPrice = 0;
             if (jewelryMaterial.Gold != null)
             {
                 totalPrice += jewelryMaterial.Gold.BuyPrice * jewelryMaterial.GoldWeight;
@@ -143,13 +145,13 @@ namespace Repositories.Implementation
                 totalPrice += jewelryMaterial.Gem.BuyPrice * jewelryMaterial.StoneQuantity;
             }
 
-            totalPrice += (float)(laborCost ?? 0);
+            totalPrice += (decimal)(laborCost ?? 0);
             return totalPrice;
         }
 
-        private static float CalculateJewelryPrice(JewelryMaterial? jewelryMaterial)
+        private static decimal CalculateJewelryPrice(JewelryMaterial? jewelryMaterial)
         {
-            float totalPrice = 0;
+            decimal totalPrice = 0;
             if (jewelryMaterial == null) return totalPrice;
 
             if (jewelryMaterial.Gold != null)

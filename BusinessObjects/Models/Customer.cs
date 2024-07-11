@@ -23,6 +23,5 @@ public partial class Customer
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
-    public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
      public virtual ICollection<Warranty> Warranties { get; set; } = new List<Warranty>();
 }

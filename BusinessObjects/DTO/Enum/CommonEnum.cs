@@ -3,7 +3,7 @@ using System.Net;
 namespace Domain.Constants
 {
     /// <summary>
-    /// 
+    /// Trạng thái response trả về
     /// </summary>
     public enum ResponseStatus
     {
@@ -24,10 +24,24 @@ namespace Domain.Constants
         Jewellery = 1,
     }
 
+    /// <summary>
+    /// Vai trò bên trong hệ thống
+    /// </summary>
     public enum AppRole
     {
         Admin = 1,
         Manager = 2,
         Staff = 3,
+    }
+
+    /// <summary>
+    /// Loại hóa đơn
+    /// 1. Mua hàng
+    /// 2. Bán hàng
+    /// </summary>
+    public enum EnumBillType
+    {
+        Sale = 1,
+        Purchase = 2,
     }
 }

@@ -32,6 +32,8 @@ namespace API.Extensions
             CreateMap<BillResponseDto, BillDetailDto>().ReverseMap();
             CreateMap<CounterDTO, Counter>().ReverseMap()
                 .ForMember(dest => dest.NumOfStaff, opt => opt.MapFrom(src => src.Users.Count));
+
+            CreateMap<BillPromotion, BillPromotionCustomDTO>();
         }
     }
 }

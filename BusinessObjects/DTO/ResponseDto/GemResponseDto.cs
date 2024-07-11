@@ -4,6 +4,6 @@ public class GemResponseDto
 {
     public int? GemId { get; set; }
     public string? GemType { get; set; }
-    public float? GemQuantity { get; set; }
-    public float? GemPrice { get; set; }
+    public decimal? GemQuantity { get; set; }
+    public decimal? GemPrice { get; set; }
 }
