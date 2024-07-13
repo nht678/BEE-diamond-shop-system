@@ -11,9 +11,9 @@ public class UserController(IUserManagement userManagement) : ControllerBase
 {
     private IUserManagement UserManagement { get; } = userManagement;
     [HttpGet("GetUsers")]
-    public async Task<IActionResult> Get()
+    public async Task<IActionResult> Get(int? roleId, int? counterId, bool? hasCounter)
     {
-        var users = await UserManagement.GetUsers();
+        var users = await UserManagement.GetUsers(roleId, counterId, hasCounter);
         return Ok(users);
     }
     [HttpGet("GetUserById/{id}")]
@@ -34,9 +34,7 @@ public class UserController(IUserManagement userManagement) : ControllerBase
     [HttpPost("AddUser")]
     public async Task<IActionResult> AddUser(UserDto userDto)
     {
-        var result = await UserManagement.AddUser(userDto);
-        if (result > 0) return Ok(new { message = "Add user success" });
-        return BadRequest(new { message = "Add user fail" });
+        return Ok(await UserManagement.AddUser(userDto));
     }
     [HttpPut("UpdateUser/{id}")]
     public async Task<IActionResult> UpdateUser(int id, UserDto userDto)

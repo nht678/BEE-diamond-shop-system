@@ -5,6 +5,8 @@ public class JewelryMaterialRequestDto
     public int GemId { get; set; }
     public int GoldId { get; set; }
 
-    public float GoldQuantity { get; set; }
-    public float GemQuantity { get; set; }
+    public decimal GoldWeight { get; set; }
+    public decimal GemQuantity { get; set; }
+
+    public int JewelryMaterialId { get; set; }
 }

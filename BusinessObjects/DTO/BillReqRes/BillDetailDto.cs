@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.DTO.Bill;
+using BusinessObjects.Models;
 
 namespace BusinessObjects.DTO.BillReqRes;
 
@@ -7,13 +8,23 @@ public class BillDetailDto
     public int Id { get; set; }
     public int BillId { get; set; }
     public string? CustomerName { get; set; }
+    public int CustomerId { get; set; }
     public string? StaffName { get; set; }
-    public double TotalAmount { get; set; }
-    public double TotalDiscount { get; set; }
+    public int UserId { get; set; }
+    public int CounterId { get; set; }
+    public decimal? DiscountRate { get; set; }
+    public string? DiscountDescription { get; set; }
+    public string? CounterName { get; set; }
+    public decimal? TotalAmount { get; set; }
+    public bool? PaymentStatus { get; set; }
     public DateTimeOffset? SaleDate { get; set; }
-    public required List<BillItemResponse?> Items { get; set; }
-    public required List<BillPromotionResponse?> Promotions { get; set; }
-    public double AdditionalDiscount { get; set; }
-    public int PointsUsed { get; set; }
-    public double FinalAmount { get; set; }
+    public List<BillJewelry?> Items { get; set; } = [];
+    public List<BillPromotionCustomDTO?> Promotions { get; set; } = [];
+    public List<Warranty?> Warranties { get; set; } = [];
+}
+
+public class BillPromotionCustomDTO : BillPromotion
+{
+    public string? Description { get; set; }
+    public decimal? DiscountRate { get; set; }
 }

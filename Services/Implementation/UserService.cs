@@ -1,15 +1,18 @@
 ﻿using AutoMapper;
+using BusinessObjects.Context;
 using BusinessObjects.DTO;
 using BusinessObjects.Models;
+using Microsoft.EntityFrameworkCore;
 using Repositories.Interface;
 using Services.Interface;
 
 namespace Services.Implementation
 {
-    public class UserService(IUserRepository userRepository, IMapper mapper) : IUserService
+    public class UserService(IUserRepository userRepository, IMapper mapper, JssatsContext context) : IUserService
     {
         public IUserRepository UserRepository { get; } = userRepository;
         public IMapper Mapper { get; } = mapper;
+        public JssatsContext Context { get; } = context;
 
         public async Task<User?> Login(LoginDto loginDto)
         {
@@ -17,9 +20,9 @@ namespace Services.Implementation
             return user ?? null;
         }
 
-        public async Task<IEnumerable<User?>?> GetUsers()
+        public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId, int? counterId, bool? hasCounter)
         {
-            return await UserRepository.Gets();
+            return Mapper.Map<IEnumerable<UserDto?>?>(await UserRepository.Gets(roleId, counterId, hasCounter));
         }
 
         public async Task<bool> IsUser(LoginDto loginDto)
@@ -34,10 +37,18 @@ namespace Services.Implementation
             return await UserRepository.Update(id, user);
         }
 
-        public async Task<int> AddUser(UserDto userDto)
+        public async Task<ServiceResponse> AddUser(UserDto userDto)
         {
+            var serviceResponse = new ServiceResponse();
             var user = Mapper.Map<User>(userDto);
-            return await UserRepository.Create(user);
+            var userExist = await Context.Users.FirstOrDefaultAsync(a => a.Email == user.Email || a.Code == user.Code);
+            if (userExist != null)
+            {
+                return serviceResponse.OnError("Email or Code already exists");
+            }
+            user.Counter = null;
+            await UserRepository.Create(user);
+            return serviceResponse.Onsuccess("User created successfully");
         }
 
         public Task<User?> GetUserById(int id)

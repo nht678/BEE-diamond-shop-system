@@ -6,7 +6,7 @@
 public partial class Customer
 {
     public int CustomerId { get; set; }
-    public string? UserName { get; set; }
+    public string? Code { get; set; }
     public string? FullName { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
@@ -23,5 +23,5 @@ public partial class Customer
 
     public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
 
-    public virtual ICollection<Purchase> Purchases { get; set; } = new List<Purchase>();
+     public virtual ICollection<Warranty> Warranties { get; set; } = new List<Warranty>();
 }
