@@ -1,5 +1,8 @@
 ﻿using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.IO;
 
 namespace BusinessObjects.Context
 {
@@ -25,23 +28,6 @@ namespace BusinessObjects.Context
             }
         }
 
-        //private static string GetConnectionString()
-        //{
-        //    var config = new ConfigurationBuilder()
-        //        .SetBasePath(Directory.GetCurrentDirectory())
-        //        .AddJsonFile("appsettings.json", true, true)
-        //        .Build();
-
-        //    var strConn = config["ConnectionStrings:JSSATS-Local"];
-        //    //var strConn = config["ConnectionStrings:JSSATS-Cloud"];
-
-        //    if (string.IsNullOrEmpty(strConn))
-        //    {
-        //        throw new InvalidOperationException("Connection string 'JSSATS' not found.");
-        //    }
-
-        //    return strConn;
-        //}
 
         public DbSet<Bill> Bills { get; set; }
         public DbSet<BillJewelry> BillJewelries { get; set; }
@@ -57,53 +43,29 @@ namespace BusinessObjects.Context
         public DbSet<Gold> Golds { get; set; }
         public DbSet<Gem> Gems { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Bill>()
-                .HasKey(b => b.BillId);
 
-            modelBuilder.Entity<BillJewelry>()
-                .HasKey(bj => bj.BillJewelryId);
+            // Define keys and relationships
+            modelBuilder.Entity<Bill>().HasKey(b => b.BillId);
+            modelBuilder.Entity<BillJewelry>().HasKey(bj => bj.BillJewelryId);
+            modelBuilder.Entity<BillPromotion>().HasKey(bp => bp.BillPromotionId);
+            modelBuilder.Entity<Counter>().HasKey(c => c.CounterId);
+            modelBuilder.Entity<Customer>().HasKey(cu => cu.CustomerId);
+            modelBuilder.Entity<Gold>().HasKey(gp => gp.GoldId);
+            modelBuilder.Entity<Jewelry>().HasKey(j => j.JewelryId);
+            modelBuilder.Entity<JewelryType>().HasKey(jt => jt.JewelryTypeId);
+            modelBuilder.Entity<JewelryMaterial>().HasKey(jm => jm.JewelryMaterialId);
+            modelBuilder.Entity<Promotion>().HasKey(p => p.PromotionId);
+            modelBuilder.Entity<User>().HasKey(u => u.UserId);
+            modelBuilder.Entity<Warranty>().HasKey(w => w.WarrantyId);
+            modelBuilder.Entity<Gem>().HasKey(g => g.GemId);
+            modelBuilder.Entity<Transaction>().HasKey(t => t.TransactionId);
 
-            modelBuilder.Entity<BillPromotion>()
-                .HasKey(bp => bp.BillPromotionId);
-
-            modelBuilder.Entity<Counter>()
-                .HasKey(c => c.CounterId);
-
-            modelBuilder.Entity<Customer>()
-                .HasKey(cu => cu.CustomerId);
-
-            modelBuilder.Entity<Gold>()
-                .HasKey(gp => gp.GoldId);
-
-            modelBuilder.Entity<Jewelry>()
-                .HasKey(j => j.JewelryId);
-
-            modelBuilder.Entity<JewelryType>()
-                .HasKey(jt => jt.JewelryTypeId);
-
-            modelBuilder.Entity<JewelryMaterial>()
-                .HasKey(jt => jt.JewelryMaterialId);
-
-            modelBuilder.Entity<Promotion>()
-                .HasKey(p => p.PromotionId);
-
-            modelBuilder.Entity<User>()
-                .HasKey(u => u.UserId);
-
-            modelBuilder.Entity<Warranty>()
-                .HasKey(w => w.WarrantyId);
-
-            modelBuilder.Entity<Gem>()
-                .HasKey(sp => sp.GemId);
-            
-            modelBuilder.Entity<Transaction>()
-                .HasKey(t => t.TransactionId);
-
-            // Relationships
+            // Define relationships
             modelBuilder.Entity<JewelryMaterial>()
                 .HasOne(jm => jm.Jewelry)
                 .WithMany(j => j.JewelryMaterials)
@@ -169,15 +131,96 @@ namespace BusinessObjects.Context
                 .WithMany(c => c.Users)
                 .HasForeignKey(u => u.CounterId)
                 .OnDelete(DeleteBehavior.NoAction);
-            
+
             modelBuilder.Entity<Transaction>()
                 .HasOne(t => t.Bill)
                 .WithMany(b => b.Transactions)
                 .HasForeignKey(t => t.BillId)
                 .OnDelete(DeleteBehavior.NoAction);
+            // Define relationships
+            // (Your relationships here)
+
+            // Specify column types for decimal properties in Bill
+            modelBuilder.Entity<Bill>()
+                .Property(b => b.TotalAmount)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Bill>()
+                .Property(b => b.DiscountRate)
+                .HasColumnType("decimal(18,2)"); // Thêm dòng này để cấu hình DiscountRate
+
+            // Specify column types for decimal properties in BillJewelry
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.GemSellPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.GoldSellPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.GoldWeight)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.LaborCost)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.Price)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.StoneQuantity)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<BillJewelry>()
+                .Property(bj => bj.TotalAmount)
+                .HasColumnType("decimal(18,2)");
+
+            // Specify column types for decimal properties in Promotion
+            modelBuilder.Entity<Promotion>()
+                .Property(p => p.DiscountRate)
+                .HasColumnType("decimal(18,2)");
+
+            // Specify column types for decimal properties in Gem
+            modelBuilder.Entity<Gem>()
+                .Property(g => g.BuyPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Gem>()
+                .Property(g => g.SellPrice)
+                .HasColumnType("decimal(18,2)");
+
+            // Specify column types for decimal properties in Gold
+            modelBuilder.Entity<Gold>()
+                .Property(g => g.BuyPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Gold>()
+                .Property(g => g.SellPrice)
+                .HasColumnType("decimal(18,2)");
+
+            // Specify column types for decimal properties in Jewelry
+            modelBuilder.Entity<Jewelry>()
+                .Property(j => j.LaborCost)
+                .HasColumnType("decimal(18,2)");
+
+            // Specify column types for decimal properties in JewelryMaterial
+            modelBuilder.Entity<JewelryMaterial>()
+                .Property(jm => jm.GoldWeight)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<JewelryMaterial>()
+                .Property(jm => jm.StoneQuantity)
+                .HasColumnType("decimal(18,2)");
+
+            // Add similar configurations for other decimal properties in other entities...
 
             // Seed data
+            // (Your seed data here)
 
+            // Seed data
             modelBuilder.Entity<Counter>().HasData(
                 new Counter { CounterId = 1, Name = "312" },
                 new Counter { CounterId = 2, Name = "231" },
@@ -190,9 +233,9 @@ namespace BusinessObjects.Context
                     UserId = 1,
                     Code = "admin Nghia",
                     Password = "5678",
-                    Email = "nghialoe46a2gmail.com",
+                    Email = "nghialoe46a2@gmail.com",
                     RoleId = 1,
-                    CounterId = 1
+                    CounterId = null
                 },
                 new User
                 {
@@ -201,14 +244,14 @@ namespace BusinessObjects.Context
                     Password = "1234",
                     Email = "JohnDoe@gmail.com",
                     RoleId = 2,
-                    CounterId = 2
+                    CounterId = null
                 },
                 new User
                 {
                     UserId = 3,
                     Code = "staff Chis Nguyen",
                     Password = "4321",
-                    Email = "Chis@yahho.com",
+                    Email = "Chis@yahoo.com",
                     RoleId = 3,
                     CounterId = 3
                 }
@@ -221,36 +264,44 @@ namespace BusinessObjects.Context
             );
 
             modelBuilder.Entity<JewelryType>().HasData(
-                new JewelryType { JewelryTypeId = 1, Name = "Vong tay" },
-                new JewelryType { JewelryTypeId = 2, Name = "Nhan" },
-                new JewelryType { JewelryTypeId = 3, Name = "Day chuyen" }
+                new JewelryType { JewelryTypeId = 1, Name = "Vòng tay" },
+                new JewelryType { JewelryTypeId = 2, Name = "Nhẫn" },
+                new JewelryType { JewelryTypeId = 3, Name = "Dây chuyền" },
+                new JewelryType { JewelryTypeId = 4, Name = "Bông tai" },
+                new JewelryType { JewelryTypeId = 5, Name = "Lắc chân" },
+                new JewelryType { JewelryTypeId = 6, Name = "Mặt dây chuyền" },
+                new JewelryType { JewelryTypeId = 7, Name = "Cài áo" },
+                new JewelryType { JewelryTypeId = 8, Name = "Móc khóa" },
+                new JewelryType { JewelryTypeId = 9, Name = "Lắc tay" },
+                new JewelryType { JewelryTypeId = 10, Name = "Vòng cổ" }
             );
 
             modelBuilder.Entity<Jewelry>().HasData(
                 new Jewelry
                 {
                     JewelryId = 1,
-                    Name = "Vong tay",
+                    Name = "Vòng tay",
                     JewelryTypeId = 1,
                     Barcode = "AVC131",
-                    LaborCost = 312,
+                    LaborCost = 213,
                     IsSold = true
                 },
                 new Jewelry
                 {
                     JewelryId = 2,
-                    Name = "Nhan",
+                    Name = "Nhẫn",
                     JewelryTypeId = 2,
                     Barcode = "SAC132",
                     LaborCost = 231,
                     IsSold = false
                 }
             );
+
             modelBuilder.Entity<JewelryMaterial>().HasData(
                 new JewelryMaterial
                 {
                     JewelryMaterialId = 1,
-                    JewelryId = 1,
+                    JewelryId = 1, // Ensure this JewelryId exists in the Jewelry table
                     GoldWeight = 30,
                     GoldId = 1,
                     StoneQuantity = 1,
@@ -259,19 +310,21 @@ namespace BusinessObjects.Context
                 new JewelryMaterial
                 {
                     JewelryMaterialId = 2,
-                    JewelryId = 2,
+                    JewelryId = 2, // Ensure this JewelryId exists in the Jewelry table
                     GoldWeight = 20,
                     GoldId = 2,
                     StoneQuantity = 1,
                     GemId = 2
                 }
-                );
+                // Removed invalid JewelryId references
+            );
+
             modelBuilder.Entity<Promotion>().HasData(
                 new Promotion
                 {
                     PromotionId = 1,
-                    Type = "Giam gia",
-                    Description = "Giam gia 10%",
+                    Type = "Giảm giá",
+                    Description = "Giảm giá 10%",
                     DiscountRate = 1,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(10)
@@ -279,8 +332,8 @@ namespace BusinessObjects.Context
                 new Promotion
                 {
                     PromotionId = 2,
-                    Type = "Giam gia",
-                    Description = "Giam gia 20%",
+                    Type = "Giảm giá",
+                    Description = "Giảm giá 20%",
                     DiscountRate = 2,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(10)
@@ -288,28 +341,28 @@ namespace BusinessObjects.Context
                 new Promotion
                 {
                     PromotionId = 3,
-                    Type = "Giam gia",
-                    Description = "Giam gia 30%",
+                    Type = "Giảm giá",
+                    Description = "Giảm giá 30%",
                     DiscountRate = 3,
                     StartDate = DateTime.Now,
                     EndDate = DateTime.Now.AddDays(10)
                 }
             );
 
-            modelBuilder.Entity<Bill>().HasData(
-                new Bill { BillId = 1, CustomerId = 1, UserId = 1, CounterId = 1, SaleDate = DateTime.Now, TotalAmount = 500 },
-                new Bill { BillId = 2, CustomerId = 2, UserId = 2, CounterId = 2, SaleDate = DateTime.Now, TotalAmount = 1200 }
-            );
+            //modelBuilder.Entity<Bill>().HasData(
+            //    new Bill { BillId = 1, CustomerId = 1, UserId = 3, CounterId = 1, SaleDate = DateTime.Now, TotalAmount = 500 },
+            //    new Bill { BillId = 2, CustomerId = 2, UserId = 3, CounterId = 2, SaleDate = DateTime.Now, TotalAmount = 1200 }
+            //);
 
-            modelBuilder.Entity<BillJewelry>().HasData(
-                new BillJewelry { BillJewelryId = 1, BillId = 1, JewelryId = 1 },
-                new BillJewelry { BillJewelryId = 2, BillId = 1, JewelryId = 2 }
-            );
+            //modelBuilder.Entity<BillJewelry>().HasData(
+            //    new BillJewelry { BillJewelryId = 1, BillId = 1, JewelryId = 1 },
+            //    new BillJewelry { BillJewelryId = 2, BillId = 1, JewelryId = 2 }
+            //);
 
-            modelBuilder.Entity<BillPromotion>().HasData(
-                new BillPromotion { BillPromotionId = 1, BillId = 1, PromotionId = 1 },
-                new BillPromotion { BillPromotionId = 2, BillId = 2, PromotionId = 1 }
-            );
+            //modelBuilder.Entity<BillPromotion>().HasData(
+            //    new BillPromotion { BillPromotionId = 1, BillId = 1, PromotionId = 1 },
+            //    new BillPromotion { BillPromotionId = 2, BillId = 2, PromotionId = 1 }
+            //);
 
             modelBuilder.Entity<Gem>().HasData(
                 new Gem
@@ -337,6 +390,24 @@ namespace BusinessObjects.Context
                     SellPrice = 600,
                     LastUpdated = DateTime.Now,
                     Type = "Emerald",
+                    City = "Ha Noi"
+                },
+                new Gem
+                {
+                    GemId = 4,
+                    BuyPrice = 500,
+                    SellPrice = 600,
+                    LastUpdated = DateTime.Now,
+                    Type = "Tektite",
+                    City = "Ha Noi"
+                },
+                new Gem
+                {
+                    GemId = 5,
+                    BuyPrice = 500,
+                    SellPrice = 600,
+                    LastUpdated = DateTime.Now,
+                    Type = "Peridot",
                     City = "Ha Noi"
                 }
             );
