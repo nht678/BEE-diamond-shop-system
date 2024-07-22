@@ -1,15 +1,17 @@
 ﻿using AutoMapper;
 using BusinessObjects.DTO;
 using BusinessObjects.Models;
+using Domain.Constants;
 using Repositories.Interface;
 using Services.Interface;
 
 namespace Services.Implementation
 {
-    public class PromotionService(IPromotionRepository promotionRepository, IMapper mapper) : IPromotionService
+    public class PromotionService(IPromotionRepository promotionRepository, IMapper mapper, SessionContext sessionContext) : IPromotionService
     {
         public IPromotionRepository PromotionRepository { get; } = promotionRepository;
         public IMapper Mapper { get; } = mapper;
+        public SessionContext SessionContext { get; } = sessionContext;
 
         public async Task<int> CreatePromotion(PromotionDto promotionDto)
         {
@@ -23,7 +25,8 @@ namespace Services.Implementation
 
         public async Task<IEnumerable<PromotionDto?>?> GetPromotions(bool available, int? customerId)
         {
-            var results = await PromotionRepository.Gets(available, customerId);
+            bool isAdmin = SessionContext.RoleId == (int)AppRole.Admin || SessionContext.RoleId == (int)AppRole.Manager;
+            var results = await PromotionRepository.Gets(available, customerId, isAdmin);
             return Mapper.Map<List<PromotionDto>>(results);
         }
 

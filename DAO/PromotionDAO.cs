@@ -14,26 +14,29 @@ namespace DAO
             _context = new JssatsContext();
         }
 
-        public async Task<IEnumerable<Promotion>> GetPromotions(bool available = false, int? customerId = null)
+        public async Task<IEnumerable<Promotion>> GetPromotions(bool available = false, int? customerId = null, bool isAdmin = false)
         {
             var query = _context.Promotions.AsQueryable();
             query = query.Include(x => x.CustomerPromotions)
                 .ThenInclude(x => x.Customer);
 
-            if (customerId != null)
+            if (!isAdmin)
             {
-                // nếu truyền customerId thì lấy promotion không có customer hoặc có customer đó
-                query = query.Where(x => x.CustomerPromotions == null || x.CustomerPromotions.Any(y => y.CustomerId == customerId));
-            }
-            else
-            {
-                // nếu không truyền customerId thì chỉ lấy promotion không có customer
-                query = query.Where(x => x.CustomerPromotions == null);
-            }
+                if (customerId != null)
+                {
+                    // nếu truyền customerId thì lấy promotion không có customer hoặc có customer đó
+                    query = query.Where(x => x.CustomerPromotions == null || x.CustomerPromotions.Count == 0 || x.CustomerPromotions.Any(y => y.CustomerId == customerId));
+                }
+                else
+                {
+                    // nếu không truyền customerId thì chỉ lấy promotion không có customer
+                    query = query.Where(x => x.CustomerPromotions == null || x.CustomerPromotions.Count == 0);
+                }
 
-            if (available)
-            {
-                query = query.Where(x => x.StartDate <= DateTime.Now && x.EndDate >= DateTime.Now);
+                if (available)
+                {
+                    query = query.Where(x => x.StartDate.Value.Date <= DateTimeOffset.Now.Date && x.EndDate.Value.Date >= DateTimeOffset.Now.Date);
+                }
             }
 
             return await query.ToListAsync();

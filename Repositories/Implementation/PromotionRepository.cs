@@ -34,9 +34,9 @@ namespace Repositories.Implementation
             return await PromotionDao.UpdatePromotion(id, promotion);
         }
 
-        public async Task<IEnumerable<Promotion>?> Gets(bool available, int? customerId)
+        public async Task<IEnumerable<Promotion>?> Gets(bool available, int? customerId, bool isAdmin)
         {
-            return await PromotionDao.GetPromotions(available, customerId);
+            return await PromotionDao.GetPromotions(available, customerId, isAdmin);
         }
     }
 }
