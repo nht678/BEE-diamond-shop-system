@@ -15,4 +15,5 @@ public partial class Counter
     public DateTimeOffset UpdatedAt { get; set; }
     public virtual ICollection<User> Users { get; set; } = [];
     public virtual ICollection<Bill> Bills { get; set; } = [];
+    public virtual ICollection<JewelryCounter> JewelryCounters { get; set; } = [];
 }

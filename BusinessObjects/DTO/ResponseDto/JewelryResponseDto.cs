@@ -1,4 +1,6 @@
-﻿namespace BusinessObjects.DTO.ResponseDto;
+﻿using BusinessObjects.DTO.Jewelry;
+
+namespace BusinessObjects.DTO.ResponseDto;
 
 public class JewelryResponseDto
 {
@@ -14,5 +16,6 @@ public class JewelryResponseDto
     public string? PreviewImage { get; set; }
     public int? WarrantyTime { get; set; }
     public IList<Materials>? Materials { get; set; }
+    public ICollection<JewelryCounterDTO>? JewelryCounters { get; set; }
     public decimal TotalPrice { get; set; }
 }

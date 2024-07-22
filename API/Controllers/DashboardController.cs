@@ -1,6 +1,6 @@
 ﻿using BusinessObjects.Context;
 using Domain.Constants;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +8,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DashboardController : ControllerBase
     {
         private readonly JssatsContext _context;
@@ -28,7 +29,7 @@ namespace API.Controllers
 
             // doanh thu bán hàng theo từng tháng trong năm hiện tại 
             var salesInYearQuery = _context.Transactions.Include(x => x.Bill).Where(b => b.Bill.Type == EnumBillType.Sale && b.Bill.CreatedAt.Year == DateTime.Now.Year);
-            
+
             // lấy ra doanh thu bán hàng theo từng tháng trong năm hiện tại
             var saleInYear = salesInYearQuery
                 .GroupBy(b => b.Bill.CreatedAt.Month)
@@ -65,8 +66,8 @@ namespace API.Controllers
 
             // lấy ra doanh thu bán hàng theo từng quầy trong năm hiện tại
             var salesByCounterInYear = salesInYearQuery
-                    .Include(x=>x.Bill)
-                    .ThenInclude(x=>x.Counter)
+                    .Include(x => x.Bill)
+                    .ThenInclude(x => x.Counter)
                 .GroupBy(b => new { b.Bill.CounterId, b.Bill.Counter.Name })
                 .Select(g => new
                 {

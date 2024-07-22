@@ -13,5 +13,7 @@ public partial class Promotion
     public DateTimeOffset? StartDate { get; set; }
     public DateTimeOffset? EndDate { get; set; }
 
-    public virtual ICollection<BillPromotion> BillPromotions { get; set; } = new List<BillPromotion>();
+    public virtual ICollection<BillPromotion> BillPromotions { get; set; } = [];
+
+    public virtual ICollection<CustomerPromotion> CustomerPromotions { get; set; } = [];
 }

@@ -1,7 +1,6 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Bill;
 using BusinessObjects.DTO.BillReqRes;
-using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 using Management.Interface;
 using Services.Interface;
@@ -15,12 +14,21 @@ namespace Management.Implementation
         private IBillService BillService { get; } = billService;
         private ITokenService TokenService { get; } = tokenService;
 
-        public async Task<TokenResponseDto?> Login(LoginDto loginDto)
+        public async Task<ServiceResponse?> Login(LoginDto loginDto)
         {
+            var serviceResponse = new ServiceResponse();
             var user = await UserService.Login(loginDto);
-            if (user == null) return null;
+            if (user == null)
+            {
+                return serviceResponse.OnError("Username or Password is incorrect");
+            };
+            if (!user.Status)
+            {
+                return serviceResponse.OnError("User is blocked, please contact admin");
+            }
             var token = await TokenService.CreateToken(user);
-            return token;
+            serviceResponse.Data = token;
+            return serviceResponse;
         }
 
         public async Task<IEnumerable<UserDto?>?> GetUsers(int? roleId, int? counterId, bool? hasCounter)

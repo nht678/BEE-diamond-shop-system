@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Context;
+using BusinessObjects.DTO;
 using DAO;
 using Management.Implementation;
 using Management.Interface;
@@ -16,6 +17,7 @@ public static class ServiceExtensions
         //Management
         serviceCollection.AddScoped<IUserManagement, UserManagement>();
         serviceCollection.AddScoped<JssatsContext>();
+        serviceCollection.AddScoped<SessionContext>();
         //Repositories
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
         serviceCollection.AddScoped<IJewelryRepository, JewelryRepository>();
@@ -59,7 +61,7 @@ public static class ServiceExtensions
         serviceCollection.AddScoped<WarrantyDao>();
         serviceCollection.AddScoped<JewelryMaterialDao>();
         serviceCollection.AddScoped<CounterDAO>();
-        
+
         return serviceCollection;
     }
 }

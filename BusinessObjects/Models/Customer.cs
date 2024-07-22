@@ -12,16 +12,11 @@ public partial class Customer
     public string? Phone { get; set; }
     public string? Gender { get; set; }
     public string? Address { get; set; }
-
-    /// <summary>
-    /// Tích điểm
-    /// </summary>
     public int Point { get; set; }
-
     public DateTimeOffset CreatedAt { get; set; }
     public DateTimeOffset UpdatedAt { get; set; }
 
-    public virtual ICollection<Bill> Bills { get; set; } = new List<Bill>();
-
-     public virtual ICollection<Warranty> Warranties { get; set; } = new List<Warranty>();
+    public virtual ICollection<Bill> Bills { get; set; } = [];
+    public virtual ICollection<Warranty> Warranties { get; set; } = [];
+    public virtual ICollection<CustomerPromotion> CustomerPromotions { get; set; } = [];
 }

@@ -1,7 +1,10 @@
 ﻿using API.Middleware;
+using BusinessObjects.DTO;
+using BusinessObjects.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 
 
 public class AuthMiddleware
@@ -43,6 +46,35 @@ public class AuthMiddleware
                         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                         await context.Response.WriteAsync("Token has expired");
                         return;
+                    }
+                    var services = context.RequestServices;
+                    var session = services.GetService(typeof(SessionContext)) as SessionContext ?? throw new Exception("SessionContext is not injection");
+                    foreach (Claim claim in jwtToken.Claims)
+                    {
+                        if (string.IsNullOrEmpty(claim.Value))
+                        {
+                            continue;
+                        }
+                        if (claim.Type == "Id")
+                        {
+                            session.UserId = int.Parse(claim.Value);
+                        }
+                        if (claim.Type == "role")
+                        {
+                            session.RoleId = int.Parse(claim.Value);
+                        }
+                        if (claim.Type == JwtRegisteredClaimNames.Jti)
+                        {
+                            session.CounterId = int.Parse(claim.Value);
+                        }
+                        if (claim.Type == JwtRegisteredClaimNames.Sub)
+                        {
+                            session.Code = claim.Value;
+                        }
+                        if (claim.Type == JwtRegisteredClaimNames.Email)
+                        {
+                            session.Email = claim.Value;
+                        }
                     }
                 }
                 catch (SecurityTokenException)
