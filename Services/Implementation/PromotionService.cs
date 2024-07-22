@@ -21,9 +21,10 @@ namespace Services.Implementation
             return await PromotionRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<Promotion?>?> GetPromotions(bool available)
+        public async Task<IEnumerable<PromotionDto?>?> GetPromotions(bool available, int? customerId)
         {
-            return await PromotionRepository.Gets(available);
+            var results = await PromotionRepository.Gets(available, customerId);
+            return Mapper.Map<List<PromotionDto>>(results);
         }
 
         public Task<Promotion?> GetPromotionById(int id)

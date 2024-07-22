@@ -1,4 +1,7 @@
-﻿using BusinessObjects.DTO.ResponseDto;
+﻿using AutoMapper;
+using BusinessObjects.Context;
+using BusinessObjects.DTO.Jewelry;
+using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 using DAO;
 using Repositories.Interface;
@@ -10,13 +13,17 @@ namespace Repositories.Implementation
         JewelryTypeDao jewelryTypeDao,
         GoldPriceDao goldPriceDao,
         GemPriceDao gemPriceDao,
-        JewelryMaterialDao jewelryMaterialDao) : IJewelryRepository
+        JewelryMaterialDao jewelryMaterialDao,
+        JssatsContext jssatsContext, 
+        IMapper mapper) : IJewelryRepository
     {
         public JewelryDao JewelryDao { get; } = jewelryDao;
         public JewelryTypeDao JewelryTypeDao { get; } = jewelryTypeDao;
         public GoldPriceDao GoldPriceDao { get; } = goldPriceDao;
         public GemPriceDao GemPriceDao { get; } = gemPriceDao;
         public JewelryMaterialDao JewelryMaterialDao { get; } = jewelryMaterialDao;
+        public JssatsContext JssatsContext { get; } = jssatsContext;
+        public IMapper Mapper { get; } = mapper;
 
         public async Task<int> Create(Jewelry entity)
         {
@@ -38,10 +45,12 @@ namespace Repositories.Implementation
             }
 
             var jewelryResponseDtos = new List<JewelryResponseDto>();
+            
 
             foreach (var jewelry in jewelries)
             {
                 var totalPrice = jewelry.JewelryMaterials.Sum(jm => CalculateTotalPrice(jm, jewelry.LaborCost));
+                var jewelryCounters = Mapper.Map<List<JewelryCounterDTO>>(jewelry.JewelryCounters ?? []);
                 var jewelryResponseDto = new JewelryResponseDto
                 {
                     JewelryId = jewelry.JewelryId,
@@ -72,7 +81,8 @@ namespace Repositories.Implementation
                         },
                         JewelryMaterialId = jm.JewelryMaterialId
                     }).ToList(),
-                    TotalPrice = totalPrice
+                    TotalPrice = totalPrice,
+                    JewelryCounters = jewelryCounters
                 };
 
                 jewelryResponseDtos.Add(jewelryResponseDto);

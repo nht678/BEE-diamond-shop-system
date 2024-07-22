@@ -1,5 +1,4 @@
-﻿using BusinessObjects.DTO.Bill;
-using BusinessObjects.Models;
+﻿using BusinessObjects.Models;
 
 namespace BusinessObjects.DTO.BillReqRes;
 
@@ -8,8 +7,12 @@ public class BillDetailDto
     public int Id { get; set; }
     public int BillId { get; set; }
     public string? CustomerName { get; set; }
+    public string? CustomerAddress { get; set; }
+    public string? CustomerPhone { get; set; }
+    public string? CustomerCode { get; set; }
     public int CustomerId { get; set; }
     public string? StaffName { get; set; }
+    public string? StaffCode { get; set; }
     public int UserId { get; set; }
     public int CounterId { get; set; }
     public decimal? DiscountRate { get; set; }

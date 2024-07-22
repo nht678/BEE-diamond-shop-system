@@ -1,8 +1,6 @@
-﻿using BusinessObjects.Models;
+﻿using BusinessObjects.DTO;
+using BusinessObjects.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.IO;
 
 namespace BusinessObjects.Context
 {
@@ -22,12 +20,11 @@ namespace BusinessObjects.Context
             {
                 //optionsBuilder.UseSqlServer(GetConnectionString());
                 //optionsBuilder.UseNpgsql(GetConnectionString());
-                optionsBuilder.UseSqlServer("Server=THANHNHAT\\SQLEXPRESS;Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
+                optionsBuilder.UseSqlServer("Server=(local);Uid=sa;Pwd=12345;Database=JSSATS;TrustServerCertificate=True");
                 //optionsBuilder.UseNpgsql("Host=aws-0-ap-southeast-1.pooler.supabase.com; Database=postgres; Code=postgres.gfjsnspjzlcfdrzxxksm; Password=Akaka0406+++");
 
             }
         }
-
 
         public DbSet<Bill> Bills { get; set; }
         public DbSet<BillJewelry> BillJewelries { get; set; }
@@ -35,6 +32,7 @@ namespace BusinessObjects.Context
         public DbSet<Counter> Counters { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Jewelry> Jewelries { get; set; }
+        public DbSet<JewelryCounter> JewelryCounters { get; set; }
         public DbSet<JewelryType> JewelryTypes { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<User> Users { get; set; }
@@ -43,6 +41,7 @@ namespace BusinessObjects.Context
         public DbSet<Gold> Golds { get; set; }
         public DbSet<Gem> Gems { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<CustomerPromotion> CustomerPromotions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -64,12 +63,20 @@ namespace BusinessObjects.Context
             modelBuilder.Entity<Warranty>().HasKey(w => w.WarrantyId);
             modelBuilder.Entity<Gem>().HasKey(g => g.GemId);
             modelBuilder.Entity<Transaction>().HasKey(t => t.TransactionId);
+            modelBuilder.Entity<CustomerPromotion>().HasKey(cp => cp.CustomerPromotionId);
+            modelBuilder.Entity<JewelryCounter>().HasKey(cp => cp.JewelryCounterId);
 
             // Define relationships
             modelBuilder.Entity<JewelryMaterial>()
                 .HasOne(jm => jm.Jewelry)
                 .WithMany(j => j.JewelryMaterials)
                 .HasForeignKey(jm => jm.JewelryId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            modelBuilder.Entity<Promotion>()
+                .HasMany(p => p.BillPromotions)
+                .WithOne(bp => bp.Promotion)
+                .HasForeignKey(bp => bp.PromotionId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<Warranty>()
@@ -137,8 +144,7 @@ namespace BusinessObjects.Context
                 .WithMany(b => b.Transactions)
                 .HasForeignKey(t => t.BillId)
                 .OnDelete(DeleteBehavior.NoAction);
-            // Define relationships
-            // (Your relationships here)
+
 
             // Specify column types for decimal properties in Bill
             modelBuilder.Entity<Bill>()

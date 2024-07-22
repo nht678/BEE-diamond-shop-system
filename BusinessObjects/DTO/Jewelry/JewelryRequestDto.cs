@@ -12,4 +12,13 @@ public class JewelryRequestDto
     public int? WarrantyTime { get; set; }
 
     public JewelryMaterialRequestDto? JewelryMaterial { get; set; } = new JewelryMaterialRequestDto();
+    public ICollection<JewelryCounterDTO>? JewelryCounters { get; set; } = [];
+}
+
+public class JewelryCounterDTO
+{
+    public int? JewelryCounterId { get; set; }
+    public int? JewelryId { get; set; }
+    public int? CounterId { get; set; }
+    public string? CounterName { get; set; }
 }

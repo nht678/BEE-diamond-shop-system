@@ -313,7 +313,11 @@ namespace Services.Implementation
                 BillId = bill.BillId,
                 CustomerName = bill.Customer.FullName,
                 CustomerId = bill.CustomerId,
+                CustomerAddress = bill.Customer.Address,
+                CustomerPhone = bill.Customer.Phone,
+                CustomerCode = bill.Customer.Code,
                 StaffName = bill.User.FullName,
+                StaffCode = bill.User.Code,
                 UserId = bill.UserId,
                 CounterId = bill.CounterId,
                 CounterName = bill.Counter.Name,
@@ -325,9 +329,11 @@ namespace Services.Implementation
 
             foreach (var item in bill.BillJewelries)
             {
+                item.Code = item.Jewelry?.Code;
+                item.Name = item.Jewelry?.Name;
+                item.Warranty = bill.Warranties.FirstOrDefault(w => w.BillId == item.BillId && w.JewelryId == item.JewelryId)?.EndDate;
                 item.Jewelry = null;
                 item.Bill = null;
-                item.Warranty = bill.Warranties.FirstOrDefault(w => w.BillId == item.BillId && w.JewelryId == item.JewelryId)?.EndDate;
                 billDetailDto.Items.Add(item);
             }
 

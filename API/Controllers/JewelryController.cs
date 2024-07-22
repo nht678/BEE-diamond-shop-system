@@ -4,6 +4,8 @@ using BusinessObjects.DTO.Jewelry;
 using BusinessObjects.Models;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interface;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -17,6 +19,7 @@ public class JewelryController(IJewelryService jewelryService, IMapper mapper) :
     [HttpGet("GetJewelries")]
     public async Task<IActionResult> GetJewelries()
     {
+        // lấy ra userid trong claims
         var jewelries = await JewelryService.GetJewelries();
         return Ok(jewelries);
     }

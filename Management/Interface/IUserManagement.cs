@@ -1,14 +1,13 @@
 ﻿using BusinessObjects.DTO;
 using BusinessObjects.DTO.Bill;
 using BusinessObjects.DTO.BillReqRes;
-using BusinessObjects.DTO.ResponseDto;
 using BusinessObjects.Models;
 
 namespace Management.Interface
 {
     public interface IUserManagement
     {
-        public Task<TokenResponseDto?> Login(LoginDto loginDto);
+        public Task<ServiceResponse?> Login(LoginDto loginDto);
         //Bill
         public Task<IEnumerable<BillDetailDto?>?> GetBills(int type);
         public Task<BillDetailDto?> GetBillById(int id);

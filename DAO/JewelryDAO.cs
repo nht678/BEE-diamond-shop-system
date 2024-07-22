@@ -1,4 +1,5 @@
 ﻿using BusinessObjects.Context;
+using BusinessObjects.DTO;
 using BusinessObjects.Models;
 using BusinessObjects.Utils;
 using Domain.Constants;
@@ -9,24 +10,31 @@ namespace DAO
     public class JewelryDao
     {
         private readonly JssatsContext _context;
-        public JewelryDao()
+        private readonly SessionContext _sessionContext;
+        public JewelryDao(SessionContext sessionContext)
         {
             _context = new JssatsContext();
-        }
-        public async Task<IEnumerable<Jewelry>> GetJewelries()
-        {
-            return await _context.Jewelries.ToListAsync();
+            _sessionContext = sessionContext;
         }
 
         public async Task<IEnumerable<Jewelry>> GetJewelriesDetails()
         {
-            return await _context.Jewelries
+            var query = _context.Jewelries
+                .Include(j => j.JewelryCounters)
+                    .ThenInclude(j => j.Counter)
                 .Include(j => j.JewelryType)
                 .Include(j => j.JewelryMaterials)
                     .ThenInclude(jm => jm.Gem)
                 .Include(j => j.JewelryMaterials)
                     .ThenInclude(jm => jm.Gold)
-                .ToListAsync();
+                .AsQueryable();
+
+            if (_sessionContext.RoleId != (int)AppRole.Admin && _sessionContext.RoleId != (int)AppRole.Manager)
+            {
+                query = query.Where(j => j.JewelryCounters.Any(jc => jc.CounterId == _sessionContext.CounterId));
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Jewelry?> GetJewelryById(int id)
@@ -63,19 +71,66 @@ namespace DAO
                 .FirstOrDefaultAsync(w => w.Code.Trim().ToLower() == jewelry.Code.Trim().ToLower() && w.JewelryId != id);
 
             if (existingJewelryWithCode != null) return 0;
-            bool hasChangeImage = existingJewelry.PreviewImage != jewelry.PreviewImage;
-            _context.Entry(existingJewelry).CurrentValues.SetValues(jewelry);
-            existingJewelry.JewelryMaterials = jewelry.JewelryMaterials;
-            _context.Entry(existingJewelry).State = EntityState.Modified;
-            int result = await _context.SaveChangesAsync();
-            if (result > 0)
+            try
             {
-                if (hasChangeImage)
+                _context.Database.BeginTransaction();
+                bool hasChangeImage = existingJewelry.PreviewImage != jewelry.PreviewImage;
+                _context.Entry(existingJewelry).CurrentValues.SetValues(jewelry);
+                existingJewelry.JewelryMaterials = jewelry.JewelryMaterials;
+                _context.Entry(existingJewelry).State = EntityState.Modified;
+
+                var oldJewelryCounter = _context.JewelryCounters.Where(x => x.JewelryId == existingJewelry.JewelryId);
+                if (oldJewelryCounter.Count() > 0)
                 {
-                    FileUtil.DeleteFile(existingJewelry.PreviewImage, EnumFileType.Jewellery);
-                    FileUtil.SaveTempToReal(jewelry.PreviewImage, EnumFileType.Jewellery);
+                    _context.JewelryCounters.RemoveRange(oldJewelryCounter);
                 }
-                return result;
+
+                // nếu jewelry.JewelryCounters.length = 0 thì xóa hết dữ liệu trong bảng JewelryCounter
+                if (jewelry.JewelryCounters.Count == 0)
+                {
+                    var jewelryCounters = new List<JewelryCounter>();
+                    var counters = _context.Counters;
+                    if (counters.Any())
+                    {
+                        foreach (var item in counters)
+                        {
+                            jewelryCounters.Add(new JewelryCounter
+                            {
+                                CounterId = item.CounterId,
+                                JewelryId = existingJewelry.JewelryId
+                            });
+                        }
+                        _context.JewelryCounters.AddRange(jewelryCounters);
+                    }
+                }
+                else
+                {
+                    var jewelryCounters = jewelry.JewelryCounters;
+                    foreach (var item in jewelryCounters)
+                    {
+                        item.JewelryId = existingJewelry.JewelryId;
+                        item.Counter = null;
+                        item.Jewelry = null;
+                    }
+                    _context.JewelryCounters.AddRange(jewelryCounters);
+
+                }
+
+                int result = await _context.SaveChangesAsync();
+                _context.Database.CommitTransaction();
+                if (result > 0)
+                {
+                    if (hasChangeImage)
+                    {
+                        FileUtil.DeleteFile(existingJewelry.PreviewImage, EnumFileType.Jewellery);
+                        FileUtil.SaveTempToReal(jewelry.PreviewImage, EnumFileType.Jewellery);
+                    }
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                _context.Database.RollbackTransaction();
             }
             return 0;
         }

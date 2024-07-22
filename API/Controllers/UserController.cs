@@ -25,11 +25,10 @@ public class UserController(IUserManagement userManagement) : ControllerBase
     }
     [AllowAnonymous]
     [HttpPost("Login")]
-    public async Task<IActionResult> Login(LoginDto loginDto)
+    public async Task<ServiceResponse> Login(LoginDto loginDto)
     {
-        var token = await UserManagement.Login(loginDto);
-        if (token != null) return Ok(token);
-        return NotFound(new { message = "Login fail" });
+        var serviceResponse = await UserManagement.Login(loginDto);
+        return serviceResponse;
     }
     [HttpPost("AddUser")]
     public async Task<IActionResult> AddUser(UserDto userDto)

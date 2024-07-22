@@ -20,5 +20,6 @@ public partial class Jewelry
     public virtual ICollection<BillJewelry> BillJewelries { get; set; } = [];
     public virtual JewelryType? JewelryType { get; set; }
     public virtual ICollection<Warranty> Warranties { get; set; } = [];
-    public virtual IList<JewelryMaterial> JewelryMaterials { get; set; } = [];
+    public virtual ICollection<JewelryMaterial> JewelryMaterials { get; set; } = [];
+    public virtual ICollection<JewelryCounter> JewelryCounters { get; set; } = [];
 }

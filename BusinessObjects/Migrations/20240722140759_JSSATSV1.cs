@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace BusinessObjects.Migrations
 {
     /// <inheritdoc />
-    public partial class Jssatv2 : Migration
+    public partial class JSSATSV1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -171,6 +171,34 @@ namespace BusinessObjects.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CustomerPromotions",
+                columns: table => new
+                {
+                    CustomerPromotionId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PromotionId = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CustomerPromotions", x => x.CustomerPromotionId);
+                    table.ForeignKey(
+                        name: "FK_CustomerPromotions_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CustomerPromotions_Promotions_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "Promotions",
+                        principalColumn: "PromotionId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bills",
                 columns: table => new
                 {
@@ -205,6 +233,34 @@ namespace BusinessObjects.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "JewelryCounters",
+                columns: table => new
+                {
+                    JewelryCounterId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    JewelryId = table.Column<int>(type: "int", nullable: false),
+                    CounterId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    UpdatedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_JewelryCounters", x => x.JewelryCounterId);
+                    table.ForeignKey(
+                        name: "FK_JewelryCounters_Counters_CounterId",
+                        column: x => x.CounterId,
+                        principalTable: "Counters",
+                        principalColumn: "CounterId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_JewelryCounters_Jewelries_JewelryId",
+                        column: x => x.JewelryId,
+                        principalTable: "Jewelries",
+                        principalColumn: "JewelryId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -390,11 +446,11 @@ namespace BusinessObjects.Migrations
                 columns: new[] { "GemId", "BuyPrice", "City", "LastUpdated", "SellPrice", "Type" },
                 values: new object[,]
                 {
-                    { 1, 300m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7711), new TimeSpan(0, 7, 0, 0, 0)), 400m, "Ruby" },
-                    { 2, 400m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7714), new TimeSpan(0, 7, 0, 0, 0)), 500m, "Sapphire" },
-                    { 3, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7717), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Emerald" },
-                    { 4, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7718), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Tektite" },
-                    { 5, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7720), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Peridot" }
+                    { 1, 300m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1954), new TimeSpan(0, 7, 0, 0, 0)), 400m, "Ruby" },
+                    { 2, 400m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1957), new TimeSpan(0, 7, 0, 0, 0)), 500m, "Sapphire" },
+                    { 3, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1959), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Emerald" },
+                    { 4, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1961), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Tektite" },
+                    { 5, 500m, "Ha Noi", new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1963), new TimeSpan(0, 7, 0, 0, 0)), 600m, "Peridot" }
                 });
 
             migrationBuilder.InsertData(
@@ -402,9 +458,9 @@ namespace BusinessObjects.Migrations
                 columns: new[] { "GoldId", "BuyPrice", "City", "LastFetchTime", "LastUpdated", "SellPrice", "Type" },
                 values: new object[,]
                 {
-                    { 1, 1000m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7749), new TimeSpan(0, 7, 0, 0, 0)), 1200m, "9999" },
-                    { 2, 1200m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7753), new TimeSpan(0, 7, 0, 0, 0)), 1400m, "SCJ" },
-                    { 3, 1400m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7755), new TimeSpan(0, 7, 0, 0, 0)), 1600m, "18k" }
+                    { 1, 1000m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1990), new TimeSpan(0, 7, 0, 0, 0)), 1200m, "9999" },
+                    { 2, 1200m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1995), new TimeSpan(0, 7, 0, 0, 0)), 1400m, "SCJ" },
+                    { 3, 1400m, "Ha Noi", null, new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1997), new TimeSpan(0, 7, 0, 0, 0)), 1600m, "18k" }
                 });
 
             migrationBuilder.InsertData(
@@ -429,9 +485,9 @@ namespace BusinessObjects.Migrations
                 columns: new[] { "PromotionId", "ApproveManager", "Description", "DiscountRate", "EndDate", "StartDate", "Type" },
                 values: new object[,]
                 {
-                    { 1, null, "Giảm giá 10%", 1m, new DateTimeOffset(new DateTime(2024, 7, 25, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7669), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7637), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" },
-                    { 2, null, "Giảm giá 20%", 2m, new DateTimeOffset(new DateTime(2024, 7, 25, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7677), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7676), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" },
-                    { 3, null, "Giảm giá 30%", 3m, new DateTimeOffset(new DateTime(2024, 7, 25, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7685), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 15, 16, 26, 1, 86, DateTimeKind.Unspecified).AddTicks(7684), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" }
+                    { 1, null, "Giảm giá 10%", 1m, new DateTimeOffset(new DateTime(2024, 8, 1, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1910), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1877), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" },
+                    { 2, null, "Giảm giá 20%", 2m, new DateTimeOffset(new DateTime(2024, 8, 1, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1923), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1922), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" },
+                    { 3, null, "Giảm giá 30%", 3m, new DateTimeOffset(new DateTime(2024, 8, 1, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1926), new TimeSpan(0, 7, 0, 0, 0)), new DateTimeOffset(new DateTime(2024, 7, 22, 21, 7, 58, 857, DateTimeKind.Unspecified).AddTicks(1925), new TimeSpan(0, 7, 0, 0, 0)), "Giảm giá" }
                 });
 
             migrationBuilder.InsertData(
@@ -502,9 +558,29 @@ namespace BusinessObjects.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CustomerPromotions_CustomerId",
+                table: "CustomerPromotions",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CustomerPromotions_PromotionId",
+                table: "CustomerPromotions",
+                column: "PromotionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Jewelries_JewelryTypeId",
                 table: "Jewelries",
                 column: "JewelryTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JewelryCounters_CounterId",
+                table: "JewelryCounters",
+                column: "CounterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_JewelryCounters_JewelryId",
+                table: "JewelryCounters",
+                column: "JewelryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_JewelryMaterials_GemId",
@@ -555,6 +631,12 @@ namespace BusinessObjects.Migrations
 
             migrationBuilder.DropTable(
                 name: "BillPromotions");
+
+            migrationBuilder.DropTable(
+                name: "CustomerPromotions");
+
+            migrationBuilder.DropTable(
+                name: "JewelryCounters");
 
             migrationBuilder.DropTable(
                 name: "JewelryMaterials");

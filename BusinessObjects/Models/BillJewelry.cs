@@ -20,6 +20,12 @@ public partial class BillJewelry
     /// </summary>
     public int JewelryId { get; set; }
 
+    [NotMapped]
+    public string? Code { get; set; }
+
+    [NotMapped]
+    public string? Name { get; set; }
+
     /// <summary>
     /// Order
     /// </summary>

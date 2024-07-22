@@ -22,13 +22,13 @@ public class TokenService(IConfiguration configuration) : ITokenService
         {
             Subject = new ClaimsIdentity(new[]
             {
-                new Claim("Id", Guid.NewGuid().ToString()),
+                new Claim("Id", user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Code ?? string.Empty),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email ?? string.Empty),
                 new Claim(ClaimTypes.Role, user.RoleId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, user.CounterId.ToString() ?? "")
             }),
-            Expires = DateTime.UtcNow.ToUniversalTime().AddMinutes(1),
+            Expires = DateTime.UtcNow.ToUniversalTime().AddDays(1),
             Issuer = issuer,
             Audience = audience,
             SigningCredentials = new SigningCredentials(

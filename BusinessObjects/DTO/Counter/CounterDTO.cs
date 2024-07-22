@@ -1,6 +1,4 @@
-﻿using BusinessObjects.Models;
-
-namespace BusinessObjects.DTO.Counter
+﻿namespace BusinessObjects.DTO.Counter
 {
     public class CounterDTO
     {

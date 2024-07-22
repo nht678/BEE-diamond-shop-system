@@ -17,6 +17,15 @@ namespace API.Extensions
             // Dto Mapping
             CreateMap<Warranty, WarrantyDto>().ReverseMap();
             CreateMap<JewelryType, JewelryTypeDto>().ReverseMap();
+            CreateMap<JewelryCounter, JewelryCounterDTO>().ReverseMap();
+            CreateMap<JewelryCounter, JewelryCounterDTO>()
+                .ForMember(x => x.CounterName, x => x.MapFrom(x => x.Counter.Name));
+
+            CreateMap<CustomerPromotion, CustomerPromotionDTO>().ReverseMap();
+            CreateMap<CustomerPromotion, CustomerPromotionDTO>()
+               .ForMember(x => x.FullName, x => x.MapFrom(x => x.Customer.FullName));
+
+
             CreateMap<Promotion, PromotionDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<User, UserCounter>().ReverseMap();
